@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lobotomy Idle</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header>
+    <div class="enk">
+      <img class="enk-icon" src="{{ url_for('static', filename='img/enkephalin.png') }}" alt="" draggable="false" onerror="this.hidden=true">
+      <span id="enk">0</span> <small>Caixas de Enkephalin</small>
+    </div>
+    <div class="who"><span id="player"></span> · <span id="dps">0</span> dano/s</div>
+  </header>
+
+  <main>
+    <section class="arena">
+      <nav id="stage-nav" class="stage-nav" aria-label="Fases"></nav>
+      <p class="stage">Fase <span id="stage">1</span></p>
+      <button id="monster" class="monster" type="button" aria-label="Atacar a Abnormalidade">
+        <img id="sprite" class="sprite" alt="" draggable="false" hidden>
+        <span id="risk" class="risk"></span>
+        <span id="name" class="name"></span>
+        <span class="bar"><span id="hp-fill"></span></span>
+        <span id="hp-text" class="hp"></span>
+      </button>
+      <p class="hint">Clique na Abnormalidade para suprimi-la.</p>
+      <label class="auto"><input id="auto" type="checkbox" checked> Avançar automaticamente</label>
+      <button id="raid-open" class="prev" type="button">Boss Raid</button>
+    </section>
+
+    <section class="shop">
+      <h2>Melhorias</h2>
+      <div id="shop"></div>
+      <div id="buy-mode" class="buy-mode" role="group" aria-label="Quantidade por compra">
+        <button type="button" class="chip current" data-mode="1">1x</button>
+        <button type="button" class="chip" data-mode="10">10x</button>
+        <button type="button" class="chip" data-mode="25">25x</button>
+        <button type="button" class="chip" data-mode="max">Max</button>
+      </div>
+      <p id="msg" class="msg"></p>
+    </section>
+    <section class="equip-panel">
+      <h2>Equipamentos</h2>
+      <div id="equip" class="equip-list"></div>
+    </section>
+  </main>
+  <button id="reset-open" class="reset" type="button">Resetar Save</button>
+  <dialog id="reset-dialog">
+    <p>Apagar todo o seu progresso e recomeçar do zero? Isso não pode ser desfeito.</p>
+    <div class="dlg-actions">
+      <button id="reset-cancel" type="button">Cancelar</button>
+      <button id="reset-confirm" type="button" class="danger">Apagar progresso</button>
+    </div>
+  </dialog>
+  <audio id="bgm" src="{{ url_for('static', filename='audio/backgroundmain.mp3') }}" loop preload="auto"></audio>
+  <audio id="bgm-boss" src="{{ url_for('static', filename='audio/bossmusic.mp3') }}" loop preload="auto"></audio>
+  <div class="music">
+    <button id="music-toggle" type="button">Música: desligada</button>
+    <input id="music-volume" type="range" min="0" max="100" value="30" aria-label="Volume da música">
+  </div>
+  <div id="menu" class="menu">
+    <h1>Project Moon Clicker - Lobotomy Corporation</h1>
+    <p>Suprima as Abnormalidades e colete caixas de Enkephalin.</p>
+    <button id="play" type="button" disabled>Carregando...</button>
+  </div>
+  <audio id="bgm-menu" src="{{ url_for('static', filename='audio/menumusic.mp3') }}" loop preload="auto"></audio>
+  <div id="raid" class="raid" hidden>
+    <div id="raid-select" class="raid-view">
+      <h2>Boss Raid</h2>
+      <p>Escolha um chefe para enfrentar.</p>
+      <div id="raid-list"></div>
+      <button id="raid-close" class="prev" type="button">Voltar ao jogo</button>
+    </div>
+    <div id="raid-fight" class="raid-view" hidden>
+      <p class="stage">Tempo restante: <span id="raid-time">60</span>s <span id="raid-progress"></span></p>
+        <button id="raid-monster" class="monster" type="button" aria-label="Atacar o inimigo">
+        <img id="raid-sprite" class="sprite" alt="" draggable="false" hidden>
+        <span id="raid-risk" class="risk"></span>
+        <span id="raid-name" class="name"></span>
+        <span class="bar"><span id="raid-hp-fill"></span></span>
+        <span id="raid-hp-text" class="hp"></span>
+      </button>
+      <p id="raid-result" class="raid-result"></p>
+      <div class="raid-actions">
+        <button id="raid-retry" class="prev" type="button" hidden>Tentar de novo</button>
+        <button id="raid-back" class="prev" type="button">Escolher outro chefe</button>
+      </div>
+    </div>
+  </div>
+  <audio id="bgm-raid" src="{{ url_for('static', filename='audio/raidmusic.mp3') }}" loop preload="auto"></audio>
+  <script src="{{ url_for('static', filename='game.js') }}"></script>
+</body>
+</html>

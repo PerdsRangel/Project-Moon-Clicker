@@ -1,0 +1,132 @@
+{
+  "title": "Lobotomy Corporation",
+  "currency": "Caixas de Enkephalin",
+  "click": {
+  "base_damage": 1,
+  "base_cost": 5,
+  "cost_growth": 1.08,
+  "milestone_every": 1,
+  "milestone_mult": 3,
+  "dps_share": 0.05
+  },
+  "milestone": { "every": 25, "mult": 3 },
+
+  "raid_time": 60,
+  "raid_unlock_every": 10,
+  "raidbosses": [
+        { "name": "The Funeral of the Dead Butterflies (Enraged)", "risk": "HE", "image": "butterfly-raid.webp", "raid_hp": 20000,
+      "drops": [
+        { "id": "r1-arma", "type": "weapon", "name": "Solemn Lament Pistols", "image": "butterfly-weapon.webp", "chance": 0.05, "bonus": 0.20 },
+        { "id": "r1-armadura", "type": "armor", "name": "Solemn Lament Suit", "image": "butterfly-armor.webp", "chance": 0.10, "bonus": 0.10 },
+        { "id": "r1-gift", "type": "gift", "name": "Solemn Lament", "image": "butterfly-gift.webp", "chance": 0.01, "bonus": 0.50 }
+      ] },
+        { "name": "Der Freischütz (7° Bullet)", "risk": "HE", "image": "magicbullet-raid.webp", "raid_hp": 1500000,
+      "drops": [
+        { "id": "r2-arma", "type": "weapon", "name": "Magic Bullet Rifle", "image": "magicbullet-weapon.webp", "chance": 0.05, "bonus": 0.20 },
+        { "id": "r2-armadura", "type": "armor", "name": "Magic Bullet Suit", "image": "magicbullet-armor.webp", "chance": 0.10, "bonus": 0.10 },
+        { "id": "r2-gift", "type": "gift", "name": "Magic Bullet", "image": "magicbullet-gift.webp", "chance": 0.01, "bonus": 0.50 }
+      ] },
+        { "name": "Queen Bee (Enraged)", "risk": "WAW", "image": "queen-bee-raid.webp", "raid_hp": 50000000, "time": 120,
+      "waves": [
+        { "name": "Worker Bee 1", "risk": "Summon", "image": "worker-bee.webp", "hp": 10000000 },
+        { "name": "Worker Bee 2", "risk": "Summon", "image": "worker-bee.webp", "hp": 20000000 },
+        { "name": "Worker Bee 3", "risk": "Summon", "image": "worker-bee.webp", "hp": 30000000 }
+      ],
+      "drops": [
+        { "id": "r3-arma", "type": "weapon", "name": "Hornet Rifle", "image": "bee-weapon.webp", "chance": 0.05, "bonus": 0.20 },
+        { "id": "r3-armadura", "type": "armor", "name": "Hornet Suit", "image": "bee-armor.webp", "chance": 0.10, "bonus": 0.10 },
+        { "id": "r3-gift", "type": "gift", "name": "Hornet", "image": "bee-gift.webp", "chance": 0.01, "bonus": 0.50 }
+      ] },
+        { "name": "The Queen of Hatred (Serpent)", "risk": "WAW", "image": "queen-hatred-raid.webp", "raid_hp": 7500000000, "time": 120,
+      "waves": [
+        { "name": "The Queen of Hatred", "risk": "WAW", "image": "queen-of-hatred.webp", "hp": 5000000000 }
+      ],
+      "drops": [
+        { "id": "r4-arma", "type": "weapon", "name": "Love and Hate Staff", "image": "hatred-weapon.webp", "chance": 0.05, "bonus": 0.20 },
+        { "id": "r4-armadura", "type": "armor", "name": "Love and Hate Suit", "image": "hatred-armor.webp", "chance": 0.10, "bonus": 0.10 },
+        { "id": "r4-gift", "type": "gift", "name": "In the Name of Love and Hate", "image": "hatred-gift.webp", "chance": 0.01, "bonus": 0.50 }
+      ] },
+        { "name": "Nome do Raid Boss 5", "risk": "TETH", "image": "raid-1.png", "raid_hp": 50000,
+      "drops": [
+        { "id": "r5-arma", "type": "weapon", "name": "Nome da arma", "image": "arma-1.png", "chance": 0.05, "bonus": 0.10 },
+        { "id": "r5-armadura", "type": "armor", "name": "Nome da armadura", "image": "armadura-1.png", "chance": 0.10, "bonus": 0.10 }
+      ] },
+        { "name": "Nome do Raid Boss 6", "risk": "TETH", "image": "raid-1.png", "raid_hp": 50000,
+      "drops": [
+        { "id": "r6-arma", "type": "weapon", "name": "Nome da arma", "image": "arma-1.png", "chance": 0.05, "bonus": 0.10 },
+        { "id": "r6-armadura", "type": "armor", "name": "Nome da armadura", "image": "armadura-1.png", "chance": 0.10, "bonus": 0.10 }
+      ] },
+        { "name": "Nome do Raid Boss 7", "risk": "TETH", "image": "raid-1.png", "raid_hp": 50000,
+      "drops": [
+        { "id": "r7-arma", "type": "weapon", "name": "Nome da arma", "image": "arma-1.png", "chance": 0.05, "bonus": 0.10 },
+        { "id": "r7-armadura", "type": "armor", "name": "Nome da armadura", "image": "armadura-1.png", "chance": 0.10, "bonus": 0.10 }
+      ] },
+        { "name": "Nome do Raid Boss 8", "risk": "TETH", "image": "raid-1.png", "raid_hp": 50000,
+      "drops": [
+        { "id": "r8-arma", "type": "weapon", "name": "Nome da arma", "image": "arma-1.png", "chance": 0.05, "bonus": 0.10 },
+        { "id": "r8-armadura", "type": "armor", "name": "Nome da armadura", "image": "armadura-1.png", "chance": 0.10, "bonus": 0.10 }
+      ] },
+        { "name": "Nome do Raid Boss 9", "risk": "TETH", "image": "raid-1.png", "raid_hp": 50000,
+      "drops": [
+        { "id": "r9-arma", "type": "weapon", "name": "Nome da arma", "image": "arma-1.png", "chance": 0.05, "bonus": 0.10 },
+        { "id": "r9-armadura", "type": "armor", "name": "Nome da armadura", "image": "armadura-1.png", "chance": 0.10, "bonus": 0.10 }
+      ] },
+        { "name": "Nome do Raid Boss 10", "risk": "TETH", "image": "raid-1.png", "raid_hp": 50000,
+      "drops": [
+        { "id": "r10-arma", "type": "weapon", "name": "Nome da arma", "image": "arma-1.png", "chance": 0.05, "bonus": 0.10 },
+        { "id": "r10-armadura", "type": "armor", "name": "Nome da armadura", "image": "armadura-1.png", "chance": 0.10, "bonus": 0.10 }
+      ] }
+  ],
+
+  "stage": {
+    "hp_base": 10,
+    "hp_growth": 1.55,
+    "reward_ratio": 0.1,
+    "boss_every": 5,
+    "boss_hp_mult": 8,
+    "boss_time": 30,
+    "max_stage": 100
+  },
+  "agent_cost_growth": 1.07,
+  "abnormalities": [
+    { "name": "Fairy Festival", "risk": "ZAYIN", "image": "fairy-festival.webp"},
+    { "name": "Punishing Bird", "risk": "TETH", "image": "punishing-bird.webp"},
+    { "name": "Scorched Girl", "risk": "TETH", "image": "scorched-girl.webp"},
+    { "name": "Forsaken Murderer", "risk": "HE", "image": "forsaken-murderer.webp"},
+    { "name": "All-Around Helper", "risk": "HE", "image": "helper.webp"},
+    { "name": "Ppodae", "risk": "TETH", "image": "ppodae.webp"},
+    { "name": "Happy Teddy Bear", "risk": "HE", "image": "teddy-bear.webp"},
+    { "name": "Spider Bud", "risk": "TETH", "image": "spider-bud.webp"},
+    { "name": "Nameless Fetus", "risk": "HE", "image": "fetus.webp"},
+    { "name": "The Snow Queen", "risk": "HE", "image": "snow-queen.webp"}
+  ],
+
+  "bosses": [
+    { "name": "Alriune", "risk": "WAW", "image": "alriune.webp", "raid_hp": 1},
+    { "name": "The Funeral of the Dead Butterflies", "risk": "HE", "image": "butterfly-man.webp", "raid_hp": 1},
+    { "name": "Big Bird", "risk": "WAW", "image": "big-bird.webp", "raid_hp": 1},
+    { "name": "Der Freischütz", "risk": "HE", "image": "magicbulletguy.webp", "raid_hp": 1}, 
+    { "name": "The Burrowing Heaven", "risk": "WAW", "image": "burrowing-heaven.webp", "raid_hp": 1},
+    { "name": "Queen Bee", "risk": "WAW", "image": "queen-bee.webp", "raid_hp": 1},
+    { "name": "The King of Greed", "risk": "WAW", "image": "king-greed.webp", "raid_hp": 1},
+    { "name": "The Queen of Hatred", "risk": "WAW", "image": "queen-of-hatred.webp", "raid_hp": 1},
+    { "name": "Little Red Riding Hooded Mercenary", "risk": "WAW", "image": "red-merc.webp", "raid_hp": 1},
+    { "name": "Judgement Bird", "risk": "WAW", "image": "judgement-bird.webp", "raid_hp": 1},
+    { "name": "The Firebird", "risk": "WAW", "image": "firebird.webp", "raid_hp": 1},
+    { "name": "The Knight of Despair", "risk": "WAW", "image": "knight-despair.webp", "raid_hp": 1},
+    { "name": "Melting Love", "risk": "ALEPH", "image": "melting-love.webp", "raid_hp": 1},
+    { "name": "Mountain of Smiling Bodies", "risk": "ALEPH", "image": "smiling-bodies.webp", "raid_hp": 1},
+    { "name": "Blue Star", "risk": "ALEPH", "image": "blue-star.webp", "raid_hp": 1},
+    { "name": "CENSORED", "risk": "ALEPH", "image": "censored.webp", "raid_hp": 1},
+    { "name": "The Silent Orchestra", "risk": "ALEPH", "image": "orchestra.webp", "raid_hp": 1}, 
+    { "name": "Nothing There", "risk": "ALEPH", "image": "nothing-there.webp", "raid_hp": 1},
+    { "name": "Apocalypse Bird", "risk": "ALEPH", "image": "apoca-bird.webp", "raid_hp": 1},
+    { "name": "White Night", "risk": "ALEPH", "image": "white-night.webp", "raid_hp": 1}
+  ],
+  "agents": [
+    { "id": "recruta", "name": "Agente Recruta", "base_cost": 15, "base_dps": 3 },
+    { "id": "treinado", "name": "Agente Treinado", "base_cost": 120, "base_dps": 30 },
+    { "id": "veterano", "name": "Agente Veterano", "base_cost": 1100, "base_dps": 120 },
+    { "id": "elite", "name": "Agente de Elite", "base_cost": 12000, "base_dps": 600 }
+  ]
+}
