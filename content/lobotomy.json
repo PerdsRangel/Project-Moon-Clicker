@@ -5,7 +5,7 @@
   "base_damage": 1,
   "base_cost": 5,
   "cost_growth": 1.08,
-  "milestone_every": 1,
+  "milestone_every": 25,
   "milestone_mult": 3,
   "dps_share": 0.05
   },
@@ -46,15 +46,26 @@
         { "id": "r4-armadura", "type": "armor", "name": "Love and Hate Suit", "image": "hatred-armor.webp", "chance": 0.10, "bonus": 0.10 },
         { "id": "r4-gift", "type": "gift", "name": "In the Name of Love and Hate", "image": "hatred-gift.webp", "chance": 0.01, "bonus": 0.50 }
       ] },
-        { "name": "Nome do Raid Boss 5", "risk": "TETH", "image": "raid-1.png", "raid_hp": 50000,
+        { "name": "Judgement Bird", "risk": "WAW", "image": "judgement-raid.webp", "raid_hp": 500000000000, "time": 120,
+      "waves": [
+        { "name": "Liberte o funcionário pego!", "risk": "HELP", "image": "dead-agent.webp", "hp": 300000000000 }
+      ],
       "drops": [
-        { "id": "r5-arma", "type": "weapon", "name": "Nome da arma", "image": "arma-1.png", "chance": 0.05, "bonus": 0.10 },
-        { "id": "r5-armadura", "type": "armor", "name": "Nome da armadura", "image": "armadura-1.png", "chance": 0.10, "bonus": 0.10 }
+        { "id": "r5-arma", "type": "weapon", "name": "Justitia Blade", "image": "judgement-weapon.webp", "chance": 0.05, "bonus": 0.20 },
+        { "id": "r5-armadura", "type": "armor", "name": "Justitia Suit", "image": "judgement-armor.webp", "chance": 0.10, "bonus": 0.10 },
+        { "id": "r5-gift", "type": "gift", "name": "Justitia", "image": "judgement-gift.webp", "chance": 0.01, "bonus": 0.50 }
       ] },
-        { "name": "Nome do Raid Boss 6", "risk": "TETH", "image": "raid-1.png", "raid_hp": 50000,
+        { "name": "The Knight of Despair", "risk": "WAW", "image": "despair-raid.webp", "raid_hp": 35000000000000, "time": 120,
+      "waves": [
+        { "name": "Tear Sword 1/4", "risk": "Summon", "image": "despair-sword.webp", "hp": 10000000000000 },
+        { "name": "Tear Sword 2/4", "risk": "Summon", "image": "despair-sword.webp", "hp": 15000000000000 },
+        { "name": "Tear Sword 3/4", "risk": "Summon", "image": "despair-sword.webp", "hp": 20000000000000 },
+        { "name": "Tear Sword 4/4", "risk": "Summon", "image": "despair-sword.webp", "hp": 25000000000000 }
+      ],
       "drops": [
-        { "id": "r6-arma", "type": "weapon", "name": "Nome da arma", "image": "arma-1.png", "chance": 0.05, "bonus": 0.10 },
-        { "id": "r6-armadura", "type": "armor", "name": "Nome da armadura", "image": "armadura-1.png", "chance": 0.10, "bonus": 0.10 }
+        { "id": "r6-arma", "type": "weapon", "name": "The Sword Sharpened with Tears Rapier", "image": "despair-weapon.webp", "chance": 0.05, "bonus": 0.20 },
+        { "id": "r6-armadura", "type": "armor", "name": "The Sword Sharpened with Tears Suit", "image": "despair-armor.webp", "chance": 0.10, "bonus": 0.10 },
+        { "id": "r6-gift", "type": "gift", "name": "The Sword Sharpened with Tears", "image": "despair-gift.webp", "chance": 0.01, "bonus": 0.50 }
       ] },
         { "name": "Nome do Raid Boss 7", "risk": "TETH", "image": "raid-1.png", "raid_hp": 50000,
       "drops": [
