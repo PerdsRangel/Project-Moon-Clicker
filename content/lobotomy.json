@@ -11,22 +11,30 @@
   },
   "milestone": { "every": 25, "mult": 3 },
 
+  "raid_upgrades": [
+    { "id": "raid-dano-1", "name": "Treinamento de Agentes (Basico)", "base_cost": 10, "cost_growth": 1.5, "bonus": 0.05, "max_level": 20 },
+    { "id": "raid-dano-2", "name": "Treinamento de Agentes (Médio)", "base_cost": 500, "cost_growth": 1.6, "bonus": 0.10, "max_level": 10 },
+    { "id": "raid-dano-3", "name": "Treinamento de Agentes (Avançado)", "base_cost": 3000, "cost_growth": 1.8, "bonus": 0.25, "max_level": 4 },
+    { "id": "raid-dano-4", "name": "Treinamento com time de Disciplina", "base_cost": 50000, "cost_growth": 2.0, "bonus": 0.50, "max_level": 2 },
+    { "id": "raid-dano-5", "name": "Agentes de Rank V", "base_cost": 1000000, "cost_growth": 2.5, "bonus": 1.0, "max_level": 1 }
+  ],
+
   "raid_time": 60,
   "raid_unlock_every": 10,
   "raidbosses": [
-        { "name": "The Funeral of the Dead Butterflies (Enraged)", "risk": "HE", "image": "butterfly-raid.webp", "raid_hp": 20000,
+        { "name": "The Funeral of the Dead Butterflies (Enraged)", "risk": "HE", "image": "butterfly-raid.webp", "raid_hp": 20000, "raid_coins": 1,
       "drops": [
         { "id": "r1-arma", "type": "weapon", "name": "Solemn Lament Pistols", "image": "butterfly-weapon.webp", "chance": 0.05, "bonus": 0.20 },
         { "id": "r1-armadura", "type": "armor", "name": "Solemn Lament Suit", "image": "butterfly-armor.webp", "chance": 0.10, "bonus": 0.10 },
         { "id": "r1-gift", "type": "gift", "name": "Solemn Lament", "image": "butterfly-gift.webp", "chance": 0.01, "bonus": 0.50 }
       ] },
-        { "name": "Der Freischütz (7° Bullet)", "risk": "HE", "image": "magicbullet-raid.webp", "raid_hp": 1500000,
+        { "name": "Der Freischütz (7° Bullet)", "risk": "HE", "image": "magicbullet-raid.webp", "raid_hp": 1500000, "raid_coins": 5,
       "drops": [
         { "id": "r2-arma", "type": "weapon", "name": "Magic Bullet Rifle", "image": "magicbullet-weapon.webp", "chance": 0.05, "bonus": 0.30 },
         { "id": "r2-armadura", "type": "armor", "name": "Magic Bullet Suit", "image": "magicbullet-armor.webp", "chance": 0.10, "bonus": 0.15 },
         { "id": "r2-gift", "type": "gift", "name": "Magic Bullet", "image": "magicbullet-gift.webp", "chance": 0.01, "bonus": 0.75 }
       ] },
-        { "name": "Queen Bee (Enraged)", "risk": "WAW", "image": "queen-bee-raid.webp", "raid_hp": 50000000, "time": 120,
+        { "name": "Queen Bee (Enraged)", "risk": "WAW", "image": "queen-bee-raid.webp", "raid_hp": 50000000, "time": 120, "raid_coins": 20,
       "waves": [
         { "name": "Worker Bee 1", "risk": "Summon", "image": "worker-bee.webp", "hp": 10000000 },
         { "name": "Worker Bee 2", "risk": "Summon", "image": "worker-bee.webp", "hp": 20000000 },
@@ -37,7 +45,7 @@
         { "id": "r3-armadura", "type": "armor", "name": "Hornet Suit", "image": "bee-armor.webp", "chance": 0.10, "bonus": 0.20 },
         { "id": "r3-gift", "type": "gift", "name": "Hornet", "image": "bee-gift.webp", "chance": 0.01, "bonus": 1.0 }
       ] },
-        { "name": "The Queen of Hatred (Serpent)", "risk": "WAW", "image": "queen-hatred-raid.webp", "raid_hp": 7500000000, "time": 120,
+        { "name": "The Queen of Hatred (Serpent)", "risk": "WAW", "image": "queen-hatred-raid.webp", "raid_hp": 7500000000, "time": 120, "raid_coins": 100,
       "waves": [
         { "name": "The Queen of Hatred", "risk": "WAW", "image": "queen-of-hatred.webp", "hp": 5000000000 }
       ],
@@ -46,7 +54,7 @@
         { "id": "r4-armadura", "type": "armor", "name": "Love and Hate Suit", "image": "hatred-armor.webp", "chance": 0.10, "bonus": 0.25 },
         { "id": "r4-gift", "type": "gift", "name": "In the Name of Love and Hate", "image": "hatred-gift.webp", "chance": 0.01, "bonus": 1.25 }
       ] },
-        { "name": "Judgement Bird", "risk": "WAW", "image": "judgement-raid.webp", "raid_hp": 500000000000, "time": 120,
+        { "name": "Judgement Bird", "risk": "WAW", "image": "judgement-raid.webp", "raid_hp": 500000000000, "time": 120, "raid_coins": 300,
       "waves": [
         { "name": "Liberte o funcionário pego!", "risk": "HELP", "image": "dead-agent.webp", "hp": 300000000000 }
       ],
@@ -55,7 +63,7 @@
         { "id": "r5-armadura", "type": "armor", "name": "Justitia Suit", "image": "judgement-armor.webp", "chance": 0.10, "bonus": 0.30 },
         { "id": "r5-gift", "type": "gift", "name": "Justitia", "image": "judgement-gift.webp", "chance": 0.01, "bonus": 1.50 }
       ] },
-        { "name": "The Knight of Despair", "risk": "WAW", "image": "despair-raid.webp", "raid_hp": 35000000000000, "time": 120,
+        { "name": "The Knight of Despair", "risk": "WAW", "image": "despair-raid.webp", "raid_hp": 35000000000000, "time": 120, "raid_coins": 1000,
       "waves": [
         { "name": "Tear Sword 1/4", "risk": "Summon", "image": "despair-sword.webp", "hp": 10000000000000 },
         { "name": "Tear Sword 2/4", "risk": "Summon", "image": "despair-sword.webp", "hp": 15000000000000 },
@@ -67,7 +75,7 @@
         { "id": "r6-armadura", "type": "armor", "name": "The Sword Sharpened with Tears Suit", "image": "despair-armor.webp", "chance": 0.10, "bonus": 0.35 },
         { "id": "r6-gift", "type": "gift", "name": "The Sword Sharpened with Tears", "image": "despair-gift.webp", "chance": 0.01, "bonus": 1.75 }
       ] },
-        { "name": "The Mountain of Smiling Bodies (Final)", "risk": "ALEPH", "image": "smilingb-raid3.webp", "raid_hp": 10000000000000000, "time": 120,
+        { "name": "The Mountain of Smiling Bodies (Final)", "risk": "ALEPH", "image": "smilingb-raid3.webp", "raid_hp": 10000000000000000, "time": 120, "raid_coins": 2500,
       "waves": [
         { "name": "Mountain of Smiling Bodies", "risk": "ALEPH", "image": "smilingb-raid1.webp", "hp": 3000000000000000 },
         { "name": "Mountain of Smiling Bodies (Fase 2)", "risk": "ALEPH", "image": "smilingb-raid2.webp", "hp": 5000000000000000 }
@@ -77,7 +85,7 @@
         { "id": "r7-armadura", "type": "armor", "name": "Smiling Bodies Suit", "image": "smile-armor.webp", "chance": 0.10, "bonus": 0.40 },
         { "id": "r7-gift", "type": "gift", "name": "Smile", "image": "smile-gift.webp", "chance": 0.01, "bonus": 2.0 }
       ] },
-        { "name": "C E N S O R E D", "risk": "ALEPH", "image": "censored-raid.webp", "raid_hp": 1000000000000000000, "time": 120,
+        { "name": "C E N S O R E D", "risk": "ALEPH", "image": "censored-raid.webp", "raid_hp": 1000000000000000000, "time": 120, "raid_coins": 10000,
       "waves": [
         { "name": "CENSORED Child", "risk": "ALEPH", "image": "censored-summon.webp", "hp": 300000000000000000 }
       ],
@@ -85,7 +93,7 @@
         { "id": "r8-arma", "type": "weapon", "name": "CENSORED Weapon", "image": "censored-weapon.webp", "chance": 0.05, "bonus": 0.90 },
         { "id": "r8-gift", "type": "gift", "name": "CENSORED", "image": "censored-gift.webp", "chance": 0.01, "bonus": 2.50 }
       ] },
-        { "name": "Nothing There", "risk": "ALEPH", "image": "nothing-raid2.webp", "raid_hp": 30000000000000000000, "time": 120,
+        { "name": "Nothing There", "risk": "ALEPH", "image": "nothing-raid2.webp", "raid_hp": 30000000000000000000, "time": 120, "raid_coins": 25000,
       "waves": [
         { "name": "Strange Egg", "risk": "ALEPH", "image": "nothing-raid1.webp", "hp": 10000000000000000000 }
       ],
@@ -94,7 +102,7 @@
         { "id": "r9-armadura", "type": "armor", "name": "Mimicry Suit", "image": "nothing-armor.webp", "chance": 0.10, "bonus": 0.50 },
         { "id": "r9-gift", "type": "gift", "name": "Mimicry", "image": "nothing-gift.webp", "chance": 0.01, "bonus": 3.0 }
       ] },
-        { "name": "Apocalypse Bird", "risk": "ALEPH", "image": "apocalypse-bird.gif", "raid_hp": 1500000000000000000000, "time": 120,  "background": "apocabird-background5.webp",
+        { "name": "Apocalypse Bird", "risk": "ALEPH", "image": "apocalypse-bird.gif", "raid_hp": 1500000000000000000000, "time": 120,  "background": "apocabird-background5.webp", "raid_coins": 100000,
       "waves": [
         { "name": "Em uma floresta escura...", "risk": "???", "image": "apoca-gate.webp", "hp": 100000000000000000000, "background": "apocabird-background1.webp" },
         { "name": "Small Beak", "risk": "?", "image": "punishing-egg.webp", "hp": 300000000000000000000, "background": "apocabird-background2.webp" },
@@ -104,7 +112,7 @@
       "drops": [
         { "id": "r10-arma", "type": "weapon", "name": "Twilight", "image": "apoca-weapon.webp", "chance": 0.05, "bonus": 3.0 },
         { "id": "r10-armadura", "type": "armor", "name": "Twilight Suit", "image": "apoca-armor.webp", "chance": 0.10, "bonus": 1.5 },
-        { "id": "r10-gift", "type": "gift", "name": "Through the Dark Twilight", "image": "apoca-gift.webp", "chance": 0.01, "bonus": 10.0 }
+        { "id": "r10-gift", "type": "gift", "name": "Through the Dark Twilight", "image": "apoca-gift.webp", "chance": 0.01, "bonus": 1 }
       ] }
   ],
 

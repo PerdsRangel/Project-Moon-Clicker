@@ -32,7 +32,7 @@ function fmt(n) {
 }
 
 function newState() {
-  return { version: 1, stage: 1, maxStage: 1, cleared: 0, equip: {}, enk: 0, clickLvl: 0, agents: {}, hp: 0, maxHp: 0, auto: true };
+    return { version: 1, stage: 1, maxStage: 1, cleared: 0, equip: {}, raidEnk: 0, raidUp: {}, enk: 0, clickLvl: 0, agents: {}, hp: 0, maxHp: 0, auto: true };
 }
 
 /* ---------- regras ---------- */
@@ -60,7 +60,8 @@ const clickCost = () => C.click.base_cost * Math.pow(C.click.cost_growth, S.clic
 const agentLvl = (a) => S.agents[a.id] || 0;
 const agentCost = (a) => a.base_cost * Math.pow(C.agent_cost_growth, agentLvl(a));
 const agentMult = (a) => Math.pow(C.milestone.mult, Math.floor(agentLvl(a) / C.milestone.every));
-const dmgMult = () => 1 + dropList.reduce((sum, d) => sum + (S.equip[d.id] ? d.bonus : 0), 0);
+const raidUpBonus = () => (C.raid_upgrades || []).reduce((sum, u) => sum + (S.raidUp[u.id] || 0) * u.bonus, 0);
+const dmgMult = () => 1 + raidUpBonus() + dropList.reduce((sum, d) => sum + (S.equip[d.id] ? d.bonus : 0), 0);
 const agentDmg = (a) => a.base_dps * agentLvl(a) * agentMult(a) * dmgMult();
 const dps = () => C.agents.reduce((sum, a) => sum + agentDmg(a), 0);
 
@@ -307,7 +308,7 @@ function startRaid(boss) {
   }]);
   // carrega os fundos antes, para não piscar na troca de inimigo
   enemies.forEach((e) => { if (e.background) new Image().src = "/static/img/" + encodeURIComponent(e.background); });
-  raid = { boss, enemies, index: 0, maxHp: 0, hp: 0, time: boss.time || C.raid_time || 60, result: null, drops: [], restartIn: null };
+  raid = { boss, enemies, index: 0, maxHp: 0, hp: 0, time: boss.time || C.raid_time || 60, result: null, drops: [], coins: 0, restartIn: null };
   setRaidEnemy();
   render();
 }
@@ -317,18 +318,20 @@ function raidDamage(amount) {
   raid.hp -= amount;
   if (raid.hp > 0) return;
   if (raid.index < raid.enemies.length - 1) {
-    raid.index += 1;   // próximo inimigo da fila
+    raid.index += 1;
     setRaidEnemy();
     return;
   }
-  raid.hp = 0;         // era o boss: a raid acabou
+  raid.hp = 0;
   raid.result = "win";
+  raid.coins = raid.boss.raid_coins || 5;
+  S.raidEnk += raid.coins;
   raid.drops = rollDrops(raid.boss);
-  if (raid.drops.length) save(false);
+  save(false); // grava moedas e drops na hora
 }
 
 function tickRaid(dt) {
-  if (!raid) return;
+  if (!raid) { renderRaidShop(); return; }
   if (raid.result) {
     // raid terminou: se a opção estiver ligada, conta o tempo e reinicia
     if (raidAuto) {
@@ -356,6 +359,57 @@ function setRaidBackground(file) {
   el.style.backgroundPosition = file ? "center" : "";
 }
 
+const fmtCoin = (n) => (n < 1e6 ? Math.floor(n).toLocaleString("pt-BR") : fmt(n));
+const raidUpLvl = (u) => S.raidUp[u.id] || 0;
+const raidUpCost = (u) => Math.ceil(u.base_cost * Math.pow(u.cost_growth || 1.5, raidUpLvl(u)));
+
+let raidShopRows = [];
+
+function buildRaidShop() {
+  const box = $("raid-shop");
+  box.innerHTML = "";
+  raidShopRows = [];
+  const ups = C.raid_upgrades || [];
+  if (ups.length === 0) {
+    box.textContent = "Nenhum upgrade cadastrado ainda.";
+    return;
+  }
+  ups.forEach((u) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "buy";
+    b.innerHTML = '<span><span class="t"></span><small></small></span><span class="cost"></span>';
+    b.querySelector(".t").textContent = u.name;
+    b.addEventListener("click", () => buyRaidUpgrade(u));
+    box.appendChild(b);
+    raidShopRows.push({ el: b, u });
+  });
+}
+
+function buyRaidUpgrade(u) {
+  const lvl = raidUpLvl(u);
+  if (u.max_level && lvl >= u.max_level) return;
+  const cost = raidUpCost(u);
+  if (S.raidEnk < cost) return;
+  S.raidEnk -= cost;
+  S.raidUp[u.id] = lvl + 1;
+  render();
+}
+
+function renderRaidShop() {
+  $("raid-coins").textContent = fmtCoin(S.raidEnk);
+  raidShopRows.forEach(({ el, u }) => {
+    const lvl = raidUpLvl(u);
+    const maxed = !!u.max_level && lvl >= u.max_level;
+    const cost = raidUpCost(u);
+    el.querySelector("small").textContent =
+      "+" + pctText(u.bonus) + " de dano por nível · Nível " + lvl + (u.max_level ? "/" + u.max_level : "") +
+      " · total +" + pctText(lvl * u.bonus);
+    el.querySelector(".cost").textContent = maxed ? "MAX" : fmtCoin(cost);
+    el.disabled = maxed || S.raidEnk < cost;
+  });
+}
+
 function renderRaid() {
   setRaidBackground(raid ? raid.enemies[raid.index].background : null);
   $("raid-select").hidden = !!raid;
@@ -375,7 +429,9 @@ function renderRaid() {
   const dropText = raid.drops.length
     ? " Drop: " + raid.drops.map((d) => d.name).join(", ") + "!"
     : " Nenhum drop desta vez.";
-  res.textContent = raid.result === "win" ? "Abnormalidade Suprimida!" + dropText : raid.result === "lose" ? "O tempo acabou. A abnormalidade escapou." : "";
+    res.textContent = raid.result === "win"
+    ? "Chefe derrotado! +" + fmtCoin(raid.coins) + " Caixas de Enkephalin Raid. " + dropText
+    : raid.result === "lose" ? "O tempo acabou. O chefe escapou." : "";
   if (raid.result && raidAuto && raid.restartIn !== null) {
     res.textContent += " Reiniciando em " + Math.ceil(Math.max(0, raid.restartIn)) + "s...";
   }
@@ -602,6 +658,7 @@ async function init() {
   });
 
   buildRaidList();
+  buildRaidShop();
   $("raid-open").addEventListener("click", openRaid);
   $("raid-close").addEventListener("click", closeRaid);
   $("raid-back").addEventListener("click", () => { raid = null; render(); });
