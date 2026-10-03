@@ -5,7 +5,7 @@
   "base_damage": 1,
   "base_cost": 5,
   "cost_growth": 1.08,
-  "milestone_every": 1,
+  "milestone_every": 25,
   "milestone_mult": 3,
   "dps_share": 0.05
   },
