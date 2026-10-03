@@ -154,9 +154,9 @@
     { "name": "White Night", "risk": "ALEPH", "image": "white-night.webp", "raid_hp": 1}
   ],
   "agents": [
-    { "id": "recruta", "name": "Agente Recruta", "base_cost": 15, "base_dps": 3 },
-    { "id": "treinado", "name": "Agente Treinado", "base_cost": 120, "base_dps": 30 },
-    { "id": "veterano", "name": "Agente Veterano", "base_cost": 1100, "base_dps": 120 },
-    { "id": "elite", "name": "Agente de Elite", "base_cost": 12000, "base_dps": 600 }
+    { "id": "recruta", "name": "Agente Recruta", "base_cost": 10, "base_dps": 5 },
+    { "id": "treinado", "name": "Agente Treinado", "base_cost": 100, "base_dps": 50 },
+    { "id": "veterano", "name": "Agente Veterano", "base_cost": 1000, "base_dps": 500 },
+    { "id": "elite", "name": "Agente de Elite", "base_cost": 10000, "base_dps": 5000 }
   ]
 }
