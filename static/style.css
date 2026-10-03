@@ -313,3 +313,5 @@ main { max-width: 1260px; grid-template-columns: 1fr 340px 300px; }
 
 .buy-mode { display: flex; gap: 0.4rem; margin-top: 0.75rem; }
 .buy-mode .chip { flex: 1; }
+
+.raid-auto { display: block; margin: 0 0 0.75rem; }

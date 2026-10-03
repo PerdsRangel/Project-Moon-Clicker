@@ -5,7 +5,7 @@
   "base_damage": 1,
   "base_cost": 5,
   "cost_growth": 1.08,
-  "milestone_every": 25,
+  "milestone_every": 1,
   "milestone_mult": 3,
   "dps_share": 0.05
   },
@@ -67,25 +67,44 @@
         { "id": "r6-armadura", "type": "armor", "name": "The Sword Sharpened with Tears Suit", "image": "despair-armor.webp", "chance": 0.10, "bonus": 0.10 },
         { "id": "r6-gift", "type": "gift", "name": "The Sword Sharpened with Tears", "image": "despair-gift.webp", "chance": 0.01, "bonus": 0.50 }
       ] },
-        { "name": "Nome do Raid Boss 7", "risk": "TETH", "image": "raid-1.png", "raid_hp": 50000,
+        { "name": "The Mountain of Smiling Bodies (Final)", "risk": "ALEPH", "image": "smilingb-raid3.webp", "raid_hp": 10000000000000000, "time": 120,
+      "waves": [
+        { "name": "Mountain of Smiling Bodies", "risk": "ALEPH", "image": "smilingb-raid1.webp", "hp": 3000000000000000 },
+        { "name": "Mountain of Smiling Bodies (Fase 2)", "risk": "ALEPH", "image": "smilingb-raid2.webp", "hp": 5000000000000000 }
+      ],
       "drops": [
-        { "id": "r7-arma", "type": "weapon", "name": "Nome da arma", "image": "arma-1.png", "chance": 0.05, "bonus": 0.10 },
-        { "id": "r7-armadura", "type": "armor", "name": "Nome da armadura", "image": "armadura-1.png", "chance": 0.10, "bonus": 0.10 }
+        { "id": "r7-arma", "type": "weapon", "name": "Smiling Bodies Weapon", "image": "smile-weapon.webp", "chance": 0.05, "bonus": 0.20 },
+        { "id": "r7-armadura", "type": "armor", "name": "Smiling Bodies Suit", "image": "smile-armor.webp", "chance": 0.10, "bonus": 0.10 },
+        { "id": "r7-gift", "type": "gift", "name": "Smile", "image": "smile-gift.webp", "chance": 0.01, "bonus": 0.50 }
       ] },
-        { "name": "Nome do Raid Boss 8", "risk": "TETH", "image": "raid-1.png", "raid_hp": 50000,
+        { "name": "C E N S O R E D", "risk": "ALEPH", "image": "censored-raid.webp", "raid_hp": 1000000000000000000, "time": 120,
+      "waves": [
+        { "name": "CENSORED Child", "risk": "ALEPH", "image": "censored-summon.webp", "hp": 300000000000000000 }
+      ],
       "drops": [
-        { "id": "r8-arma", "type": "weapon", "name": "Nome da arma", "image": "arma-1.png", "chance": 0.05, "bonus": 0.10 },
-        { "id": "r8-armadura", "type": "armor", "name": "Nome da armadura", "image": "armadura-1.png", "chance": 0.10, "bonus": 0.10 }
+        { "id": "r8-arma", "type": "weapon", "name": "CENSORED Weapon", "image": "censored-weapon.webp", "chance": 0.05, "bonus": 0.20 },
+        { "id": "r8-gift", "type": "gift", "name": "CENSORED", "image": "censored-gift.webp", "chance": 0.01, "bonus": 0.50 }
       ] },
-        { "name": "Nome do Raid Boss 9", "risk": "TETH", "image": "raid-1.png", "raid_hp": 50000,
+        { "name": "Nothing There", "risk": "ALEPH", "image": "nothing-raid2.webp", "raid_hp": 30000000000000000000, "time": 120,
+      "waves": [
+        { "name": "Strange Egg", "risk": "ALEPH", "image": "nothing-raid1.webp", "hp": 10000000000000000000 }
+      ],
       "drops": [
-        { "id": "r9-arma", "type": "weapon", "name": "Nome da arma", "image": "arma-1.png", "chance": 0.05, "bonus": 0.10 },
-        { "id": "r9-armadura", "type": "armor", "name": "Nome da armadura", "image": "armadura-1.png", "chance": 0.10, "bonus": 0.10 }
+        { "id": "r9-arma", "type": "weapon", "name": "Mimicry Blade", "image": "nothing-weapon.webp", "chance": 0.05, "bonus": 0.20 },
+        { "id": "r9-armadura", "type": "armor", "name": "Mimicry Suit", "image": "nothing-armor.webp", "chance": 0.10, "bonus": 0.10 },
+        { "id": "r9-gift", "type": "gift", "name": "Mimicry", "image": "nothing-gift.webp", "chance": 0.01, "bonus": 0.50 }
       ] },
-        { "name": "Nome do Raid Boss 10", "risk": "TETH", "image": "raid-1.png", "raid_hp": 50000,
+        { "name": "Apocalypse Bird", "risk": "ALEPH", "image": "apocalypse-bird.gif", "raid_hp": 1500000000000000000000, "time": 120,  "background": "apocabird-background5.webp",
+      "waves": [
+        { "name": "Em uma floresta escura...", "risk": "???", "image": "apoca-gate.webp", "hp": 100000000000000000000, "background": "apocabird-background1.webp" },
+        { "name": "Small Beak", "risk": "?", "image": "punishing-egg.webp", "hp": 300000000000000000000, "background": "apocabird-background2.webp" },
+        { "name": "Long Arms", "risk": "?", "image": "judgement-egg.webp", "hp": 300000000000000000000, "background": "apocabird-background3.webp" },
+        { "name": "Big Eyes", "risk": "?", "image": "bigbird-egg.webp", "hp": 300000000000000000000, "background": "apocabird-background4.webp" }
+      ],
       "drops": [
-        { "id": "r10-arma", "type": "weapon", "name": "Nome da arma", "image": "arma-1.png", "chance": 0.05, "bonus": 0.10 },
-        { "id": "r10-armadura", "type": "armor", "name": "Nome da armadura", "image": "armadura-1.png", "chance": 0.10, "bonus": 0.10 }
+        { "id": "r10-arma", "type": "weapon", "name": "Twilight", "image": "apoca-weapon.webp", "chance": 0.05, "bonus": 0.20 },
+        { "id": "r10-armadura", "type": "armor", "name": "Twilight Suit", "image": "apoca-armor.webp", "chance": 0.10, "bonus": 0.10 },
+        { "id": "r10-gift", "type": "gift", "name": "Through the Dark Twilight", "image": "apoca-gift.webp", "chance": 0.01, "bonus": 0.50 }
       ] }
   ],
 
@@ -128,10 +147,10 @@
     { "name": "Melting Love", "risk": "ALEPH", "image": "melting-love.webp", "raid_hp": 1},
     { "name": "Mountain of Smiling Bodies", "risk": "ALEPH", "image": "smiling-bodies.webp", "raid_hp": 1},
     { "name": "Blue Star", "risk": "ALEPH", "image": "blue-star.webp", "raid_hp": 1},
-    { "name": "CENSORED", "risk": "ALEPH", "image": "censored.webp", "raid_hp": 1},
-    { "name": "The Silent Orchestra", "risk": "ALEPH", "image": "orchestra.webp", "raid_hp": 1}, 
+    { "name": "CENSORED", "risk": "ALEPH", "image": "censored.webp", "raid_hp": 1}, 
+    { "name": "The Silent Orchestra", "risk": "ALEPH", "image": "orchestra.webp", "raid_hp": 1},
     { "name": "Nothing There", "risk": "ALEPH", "image": "nothing-there.webp", "raid_hp": 1},
-    { "name": "Apocalypse Bird", "risk": "ALEPH", "image": "apoca-bird.webp", "raid_hp": 1},
+    { "name": "Army in Black", "risk": "ALEPH", "image": "army-black.webp", "raid_hp": 1},
     { "name": "White Night", "risk": "ALEPH", "image": "white-night.webp", "raid_hp": 1}
   ],
   "agents": [

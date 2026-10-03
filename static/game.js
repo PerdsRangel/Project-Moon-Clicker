@@ -16,6 +16,8 @@ let inRaid = false;        // a tela de Boss Raid está aberta?
 let raid = null;           // luta em andamento: { boss, hp, maxHp, time, result }
 let dropList = [];         // todos os equipamentos do jogo
 let buyMode = 1;           // quantidade por compra: 1, 10, 25 ou "max"
+let raidAuto = false;      // reiniciar a raid sozinho ao terminar?
+const RAID_RESTART_DELAY = 3; // segundos de espera antes de reiniciar
 
 const $ = (id) => document.getElementById(id);
 
@@ -295,9 +297,17 @@ function setRaidEnemy() {
 
 function startRaid(boss) {
   const enemies = (boss.waves || [])
-    .map((w) => ({ name: w.name, risk: w.risk, image: w.image, hp: w.hp || 10000, isBoss: false }))
-    .concat([{ name: boss.name, risk: boss.risk, image: boss.image, hp: boss.raid_hp || 100000, isBoss: true }]);
-  raid = { boss, enemies, index: 0, maxHp: 0, hp: 0, time: boss.time || C.raid_time || 60, result: null, drops: [] };
+  .map((w) => ({
+    name: w.name, risk: w.risk, image: w.image, hp: w.hp || 10000, isBoss: false,
+    background: w.background || boss.waves_background || boss.background || null,
+  }))
+  .concat([{
+    name: boss.name, risk: boss.risk, image: boss.image, hp: boss.raid_hp || 100000, isBoss: true,
+    background: boss.background || null,
+  }]);
+  // carrega os fundos antes, para não piscar na troca de inimigo
+  enemies.forEach((e) => { if (e.background) new Image().src = "/static/img/" + encodeURIComponent(e.background); });
+  raid = { boss, enemies, index: 0, maxHp: 0, hp: 0, time: boss.time || C.raid_time || 60, result: null, drops: [], restartIn: null };
   setRaidEnemy();
   render();
 }
@@ -318,13 +328,36 @@ function raidDamage(amount) {
 }
 
 function tickRaid(dt) {
-  if (!raid || raid.result) return;
+  if (!raid) return;
+  if (raid.result) {
+    // raid terminou: se a opção estiver ligada, conta o tempo e reinicia
+    if (raidAuto) {
+      if (raid.restartIn === null) raid.restartIn = RAID_RESTART_DELAY;
+      raid.restartIn -= dt;
+      if (raid.restartIn <= 0) startRaid(raid.boss);
+    }
+    return;
+  }
   raidDamage(dps() * dt);
   raid.time -= dt;
   if (raid.result === null && raid.time <= 0) { raid.time = 0; raid.result = "lose"; }
 }
 
+let raidBg = null;
+
+function setRaidBackground(file) {
+  if (file === raidBg) return;
+  raidBg = file;
+  const el = $("raid");
+  el.style.backgroundImage = file
+    ? 'linear-gradient(rgba(20, 23, 26, 0.6), rgba(20, 23, 26, 0.8)), url("/static/img/' + encodeURIComponent(file) + '")'
+    : "";
+  el.style.backgroundSize = file ? "cover" : "";
+  el.style.backgroundPosition = file ? "center" : "";
+}
+
 function renderRaid() {
+  setRaidBackground(raid ? raid.enemies[raid.index].background : null);
   $("raid-select").hidden = !!raid;
   $("raid-fight").hidden = !raid;
   if (!raid) return;
@@ -343,6 +376,9 @@ function renderRaid() {
     ? " Drop: " + raid.drops.map((d) => d.name).join(", ") + "!"
     : " Nenhum drop desta vez.";
   res.textContent = raid.result === "win" ? "Abnormalidade Suprimida!" + dropText : raid.result === "lose" ? "O tempo acabou. A abnormalidade escapou." : "";
+  if (raid.result && raidAuto && raid.restartIn !== null) {
+    res.textContent += " Reiniciando em " + Math.ceil(Math.max(0, raid.restartIn)) + "s...";
+  }
   res.className = "raid-result" + (raid.result ? " " + raid.result : "");
   $("raid-retry").hidden = !raid.result;
   $("raid-monster").disabled = !!raid.result;
@@ -570,6 +606,7 @@ async function init() {
   $("raid-close").addEventListener("click", closeRaid);
   $("raid-back").addEventListener("click", () => { raid = null; render(); });
   $("raid-retry").addEventListener("click", () => startRaid(raid.boss));
+  $("raid-auto").addEventListener("change", (e) => { raidAuto = e.target.checked; });
   $("raid-monster").addEventListener("click", () => { raidDamage(clickDamage()); render(); });
   $("raid-sprite").addEventListener("error", () => { $("raid-sprite").hidden = true; });
 
