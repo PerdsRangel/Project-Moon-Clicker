@@ -117,9 +117,9 @@
         { "name": "Big Eyes", "risk": "?", "image": "bigbird-egg.webp", "hp": 300000000000000000000, "background": "apocabird-background4.webp" }
       ],
       "drops": [
-        { "id": "r10-arma", "type": "weapon", "name": "Twilight", "image": "apoca-weapon.webp", "chance": 0.05, "bonus": 3.0 },
-        { "id": "r10-armadura", "type": "armor", "name": "Twilight Suit", "image": "apoca-armor.webp", "chance": 0.10, "bonus": 1.5 },
-        { "id": "r10-gift", "type": "gift", "name": "Through the Dark Twilight", "image": "apoca-gift.webp", "chance": 0.01, "bonus": 1 }
+        { "id": "r10-arma", "type": "weapon", "name": "Twilight", "image": "apoca-weapon.webp", "chance": 0.05, "bonus": 10.0 },
+        { "id": "r10-armadura", "type": "armor", "name": "Twilight Suit", "image": "apoca-armor.webp", "chance": 0.10, "bonus": 5.0 },
+        { "id": "r10-gift", "type": "gift", "name": "Through the Dark Twilight", "image": "apoca-gift.webp", "chance": 0.01, "bonus": 30.0 }
       ] }
   ],
 
