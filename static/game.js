@@ -611,15 +611,34 @@ function renderEquip() {
 }
 
 let skillEls = [];
+let masterEls = [];
+
+function toggleAllAuto() {
+  const skills = C.skills || [];
+  const on = !skills.every((s) => S.skillAuto[s.id]);
+  skills.forEach((s) => { S.skillAuto[s.id] = on; });
+  render();
+}
 
 function buildSkills() {
   skillEls = [];
+  masterEls = [];
   const hasAlly = (C.skills || []).some((s) => s.ally_image);
   ["skills", "raid-skills"].forEach((boxId) => {
     const box = $(boxId);
     if (!box) return;
     box.innerHTML = "";
     box.classList.toggle("has-ally", hasAlly);
+    const master = document.createElement("button");
+    master.type = "button";
+    master.className = "skills-all";
+    master.textContent = "AUTO";
+    master.title = "Ativar todas as habilidades automaticamente";
+    master.setAttribute("aria-pressed", "false");
+    master.addEventListener("click", toggleAllAuto);
+    box.appendChild(master);
+    box.classList.add("has-master");
+    masterEls.push(master);
     (C.skills || []).forEach((s) => {
       if (boxId === "raid-skills" && s.effect === "money") return;
       const wrap = document.createElement("div");
@@ -659,6 +678,13 @@ function buildSkills() {
 }
 
 function renderSkills() {
+  const all = C.skills || [];
+  const allOn = all.length > 0 && all.every((s) => S.skillAuto[s.id]);
+  masterEls.forEach((b) => {
+    b.classList.toggle("on", allOn);
+    b.setAttribute("aria-pressed", allOn ? "true" : "false");
+    b.parentElement.classList.toggle("all-on", allOn);
+  });
   const t = Date.now();
   skillEls.forEach((el) => {
     const { wrap, s } = el;

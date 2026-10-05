@@ -455,3 +455,39 @@ main { max-width: 1260px; grid-template-columns: 1fr 340px 300px; }
 }
 .raid-log-list li { padding: 0.15rem 0; }
 .raid-log-list:empty::before { content: "Nenhuma luta ainda."; }
+
+.skills { position: relative; padding-left: 28px; }
+.skills-all {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 22px;
+  padding: 0;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  cursor: pointer;
+}
+.skills.has-ally .skills-all { bottom: 88px; }
+.skills-all:hover { border-color: var(--muted); }
+.skills-all.on { border-color: var(--enk); color: var(--enk); }
+.skills-all:focus-visible { outline: 2px solid var(--enk); outline-offset: 2px; }
+
+/* linhas que ligam a barra a cada skill */
+.skills.has-master .skill::before {
+  content: "";
+  position: absolute;
+  left: -6px;
+  top: 54px;
+  width: 6px;
+  height: 2px;
+  background: var(--line);
+}
+.skills.all-on .skill::before { background: var(--enk); }
