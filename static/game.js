@@ -17,7 +17,10 @@ let raid = null;           // luta em andamento: { boss, hp, maxHp, time, result
 let dropList = [];         // todos os equipamentos do jogo
 let buyMode = 1;           // quantidade por compra: 1, 10, 25 ou "max"
 let raidAuto = false;      // reiniciar a raid sozinho ao terminar?
-const RAID_RESTART_DELAY = 3; // segundos de espera antes de reiniciar
+let raidSession = null;    // resumo da sessão de farm do boss atual
+let raidSessionId = 0;
+let lastSave = 0;          // última gravação rápida (limita as gravações em vitórias seguidas)
+let logKey = "";
 
 const $ = (id) => document.getElementById(id);
 
@@ -343,7 +346,10 @@ function setRaidEnemy() {
   if (e.image) img.src = "/static/img/" + e.image;
 }
 
-function startRaid(boss) {
+function startRaid(boss, keep) {
+  if (!keep || !raidSession || raidSession.boss !== boss) {
+    raidSession = { id: ++raidSessionId, boss, runs: 0, wins: 0, coins: 0, items: {}, log: [] };
+  }
   const enemies = (boss.waves || [])
   .map((w) => ({
     name: w.name, risk: w.risk, image: w.image, hp: w.hp || 10000, isBoss: false,
@@ -354,7 +360,7 @@ function startRaid(boss) {
     background: boss.background || null,
   }]);
   // carrega os fundos antes, para não piscar na troca de inimigo
-  enemies.forEach((e) => { if (e.background) new Image().src = "/static/img/" + encodeURIComponent(e.background); });
+  if (!keep) enemies.forEach((e) => { if (e.background) new Image().src = "/static/img/" + encodeURIComponent(e.background); });
   raid = { boss, enemies, index: 0, maxHp: 0, hp: 0, time: boss.time || C.raid_time || 60, result: null, drops: [], coins: 0, restartIn: null };
   setRaidEnemy();
   render();
@@ -374,23 +380,23 @@ function raidDamage(amount) {
   raid.coins = raid.boss.raid_coins || 5;
   S.raidEnk += raid.coins;
   raid.drops = rollDrops(raid.boss);
-  save(false); // grava moedas e drops na hora
+  logRaid("win");
+  saveSoon();
 }
 
 function tickRaid(dt) {
-  if (!raid) { renderRaidShop(); return; }
+  if (!raid) return;
   if (raid.result) {
-    // raid terminou: se a opção estiver ligada, conta o tempo e reinicia
-    if (raidAuto) {
-      if (raid.restartIn === null) raid.restartIn = RAID_RESTART_DELAY;
-      raid.restartIn -= dt;
-      if (raid.restartIn <= 0) startRaid(raid.boss);
-    }
+    if (raidAuto) startRaid(raid.boss, true); // reinicia na hora
     return;
   }
   raidDamage(dps() * dt);
   raid.time -= dt;
-  if (raid.result === null && raid.time <= 0) { raid.time = 0; raid.result = "lose"; }
+  if (raid.result === null && raid.time <= 0) {
+    raid.time = 0;
+    raid.result = "lose";
+    logRaid("lose");
+  }
 }
 
 let raidBg = null;
@@ -457,11 +463,40 @@ function renderRaidShop() {
   });
 }
 
+function saveSoon() {
+  const now = Date.now();
+  if (now - lastSave < 5000) return; // no máximo uma gravação a cada 5 s
+  lastSave = now;
+  save(false);
+}
+
+function logRaid(result) {
+  const ss = raidSession;
+  ss.runs += 1;
+  if (result === "win") {
+    ss.wins += 1;
+    ss.coins += raid.coins;
+    raid.drops.forEach((d) => { ss.items[d.name] = (ss.items[d.name] || 0) + 1; });
+  }
+}
+
+function renderRaidLog() {
+  const ss = raidSession;
+  if (!ss) return;
+  const key = ss.id + ":" + ss.runs + ":" + ss.coins;
+  if (key === logKey) return;
+  logKey = key;
+  const items = Object.entries(ss.items).map(([n, c]) => n + (c > 1 ? " x" + c : "")).join(", ");
+  $("raid-summary").textContent =
+    ss.runs + " lutas · " + ss.wins + " vitórias · +" + fmtCoin(ss.coins) + " Caixas de Enkephalin Raid" +
+    (items ? " · Itens: " + items : "");
+}
+
 function renderRaid() {
   setRaidBackground(raid ? raid.enemies[raid.index].background : null);
   $("raid-select").hidden = !!raid;
   $("raid-fight").hidden = !raid;
-  if (!raid) return;
+  if (!raid) { renderRaidShop(); return; }
   const e = raid.enemies[raid.index];
   $("raid-name").textContent = e.name;
   $("raid-risk").textContent = e.risk + (e.isBoss ? " (Boss Raid)" : "");
@@ -479,12 +514,10 @@ function renderRaid() {
     res.textContent = raid.result === "win"
     ? "Chefe derrotado! +" + fmtCoin(raid.coins) + " Caixas de Enkephalin Raid. " + dropText
     : raid.result === "lose" ? "O tempo acabou. O chefe escapou." : "";
-  if (raid.result && raidAuto && raid.restartIn !== null) {
-    res.textContent += " Reiniciando em " + Math.ceil(Math.max(0, raid.restartIn)) + "s...";
-  }
   res.className = "raid-result" + (raid.result ? " " + raid.result : "");
   $("raid-retry").hidden = !raid.result;
   $("raid-monster").disabled = !!raid.result;
+  renderRaidLog();
 }
 
 function goToStage(n) {
@@ -793,7 +826,7 @@ async function init() {
   $("raid-open").addEventListener("click", openRaid);
   $("raid-close").addEventListener("click", closeRaid);
   $("raid-back").addEventListener("click", () => { raid = null; render(); });
-  $("raid-retry").addEventListener("click", () => startRaid(raid.boss));
+  $("raid-retry").addEventListener("click", () => startRaid(raid.boss, true));
   $("raid-auto").addEventListener("change", (e) => { raidAuto = e.target.checked; });
   $("raid-monster").addEventListener("click", () => { raidDamage(clickDamage()); render(); });
   $("raid-sprite").addEventListener("error", () => { $("raid-sprite").hidden = true; });

@@ -436,3 +436,22 @@ main { max-width: 1260px; grid-template-columns: 1fr 340px 300px; }
   font: inherit;
 }
 .cheat-row input:focus-visible { outline: 2px solid var(--enk); outline-offset: 2px; }
+
+.raid-log { margin-top: 1.25rem; text-align: left; }
+.raid-log h3 { margin: 0 0 0.5rem; }
+.raid-summary { margin: 0 0 0.5rem; color: var(--enk); font-size: 0.9rem; }
+.raid-log-list {
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  max-height: 180px;
+  overflow-y: auto;
+  list-style: none;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  scrollbar-color: var(--line) var(--bg);
+}
+.raid-log-list li { padding: 0.15rem 0; }
+.raid-log-list:empty::before { content: "Nenhuma luta ainda."; }

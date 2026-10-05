@@ -110,6 +110,10 @@
         <button id="raid-retry" class="prev" type="button" hidden>Tentar de novo</button>
         <button id="raid-back" class="prev" type="button">Escolher outro chefe</button>
       </div>
+      <div class="raid-log">
+        <h3>Registro da Sessão</h3>
+        <p id="raid-summary" class="raid-summary"></p>
+      </div>
     </div>
   </div>
   <audio id="bgm-raid" src="{{ url_for('static', filename='audio/raidmusic.mp3') }}" loop preload="auto"></audio>
