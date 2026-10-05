@@ -11,12 +11,19 @@
   },
   "milestone": { "every": 25, "mult": 3 },
 
+    "skills": [
+    { "id": "skill-dps-1", "name": "E.G.O Equipment", "image": "butterfly-armor.webp", "effect": "damage", "mult": 3, "duration": 15, "cooldown": 30, "description": "Aumenta seu DPS em 3x durante 10s.", "unlock_stage": 10 },
+    { "id": "skill-money", "name": "Greed", "image": "greed-skill.webp", "effect": "money", "mult": 3, "duration": 30, "cooldown": 120, "description": "Aumenta seu ganho de Enkephalin em 3x durante 30s.", "unlock_stage": 35 },
+    { "id": "skill-dps-2", "name": "Rabbit Team", "image": "rabbit-skill.webp", "effect": "damage", "mult": 5, "duration": 15, "cooldown": 60, "cost_pct": 5, "description": "Chame o Rabbit Team e aumente seu DPS em 5x durante 15s, mas eles não trabalham de graça. (5% de seu Enkephalin Atual).", "unlock_stage": 50, "ally_image": "rabbit-team.webp" }
+  ],
+
   "raid_upgrades": [
-    { "id": "raid-dano-1", "name": "Treinamento de Agentes (Basico)", "base_cost": 10, "cost_growth": 1.5, "bonus": 0.05, "max_level": 20 },
-    { "id": "raid-dano-2", "name": "Treinamento de Agentes (Médio)", "base_cost": 500, "cost_growth": 1.6, "bonus": 0.10, "max_level": 10 },
-    { "id": "raid-dano-3", "name": "Treinamento de Agentes (Avançado)", "base_cost": 3000, "cost_growth": 1.8, "bonus": 0.25, "max_level": 4 },
-    { "id": "raid-dano-4", "name": "Treinamento com time de Disciplina", "base_cost": 50000, "cost_growth": 2.0, "bonus": 0.50, "max_level": 2 },
-    { "id": "raid-dano-5", "name": "Agentes de Rank V", "base_cost": 1000000, "cost_growth": 2.5, "bonus": 1.0, "max_level": 1 }
+    { "id": "raid-dano-1", "name": "Treinamento de Agentes (Basico)", "base_cost": 10, "cost_growth": 1.5, "bonus": 0.05, "max_level": 50 },
+    { "id": "raid-dano-2", "name": "Treinamento de Agentes (Médio)", "base_cost": 500, "cost_growth": 1.6, "bonus": 0.10, "max_level": 25 },
+    { "id": "raid-dano-3", "name": "Treinamento de Agentes (Avançado)", "base_cost": 3000, "cost_growth": 1.8, "bonus": 0.25, "max_level": 10 },
+    { "id": "raid-dano-4", "name": "Treinamento com time de Disciplina", "base_cost": 50000, "cost_growth": 2.0, "bonus": 0.50, "max_level": 5 },
+    { "id": "raid-dano-5", "name": "Agentes de Rank V", "base_cost": 1000000, "cost_growth": 2.5, "bonus": 1.0, "max_level": 3 },
+    { "id": "raid-dano-6", "name": "Agentes com Equipamentos ALEPH", "base_cost": 100000000, "cost_growth": 2.5, "bonus": 10.0, "max_level": 1 }
   ],
 
   "raid_time": 60,
@@ -75,7 +82,7 @@
         { "id": "r6-armadura", "type": "armor", "name": "The Sword Sharpened with Tears Suit", "image": "despair-armor.webp", "chance": 0.10, "bonus": 0.35 },
         { "id": "r6-gift", "type": "gift", "name": "The Sword Sharpened with Tears", "image": "despair-gift.webp", "chance": 0.01, "bonus": 1.75 }
       ] },
-        { "name": "The Mountain of Smiling Bodies (Final)", "risk": "ALEPH", "image": "smilingb-raid3.webp", "raid_hp": 10000000000000000, "time": 120, "raid_coins": 2500,
+        { "name": "The Mountain of Smiling Bodies (Final)", "risk": "ALEPH", "image": "smilingb-raid3.webp", "raid_hp": 10000000000000000, "time": 120, "raid_coins": 5000,
       "waves": [
         { "name": "Mountain of Smiling Bodies", "risk": "ALEPH", "image": "smilingb-raid1.webp", "hp": 3000000000000000 },
         { "name": "Mountain of Smiling Bodies (Fase 2)", "risk": "ALEPH", "image": "smilingb-raid2.webp", "hp": 5000000000000000 }
@@ -85,24 +92,24 @@
         { "id": "r7-armadura", "type": "armor", "name": "Smiling Bodies Suit", "image": "smile-armor.webp", "chance": 0.10, "bonus": 0.40 },
         { "id": "r7-gift", "type": "gift", "name": "Smile", "image": "smile-gift.webp", "chance": 0.01, "bonus": 2.0 }
       ] },
-        { "name": "C E N S O R E D", "risk": "ALEPH", "image": "censored-raid.webp", "raid_hp": 1000000000000000000, "time": 120, "raid_coins": 10000,
+        { "name": "C E N S O R E D", "risk": "ALEPH", "image": "censored-raid.webp", "raid_hp": 1000000000000000000, "time": 120, "raid_coins": 25000,
       "waves": [
         { "name": "CENSORED Child", "risk": "ALEPH", "image": "censored-summon.webp", "hp": 300000000000000000 }
       ],
       "drops": [
-        { "id": "r8-arma", "type": "weapon", "name": "CENSORED Weapon", "image": "censored-weapon.webp", "chance": 0.05, "bonus": 0.90 },
-        { "id": "r8-gift", "type": "gift", "name": "CENSORED", "image": "censored-gift.webp", "chance": 0.01, "bonus": 2.50 }
+        { "id": "r8-arma", "type": "weapon", "name": "CENSORED Weapon", "image": "censored-weapon.webp", "chance": 0.05, "bonus": 1.0 },
+        { "id": "r8-gift", "type": "gift", "name": "CENSORED", "image": "censored-gift.webp", "chance": 0.01, "bonus": 3.0 }
       ] },
-        { "name": "Nothing There", "risk": "ALEPH", "image": "nothing-raid2.webp", "raid_hp": 30000000000000000000, "time": 120, "raid_coins": 25000,
+        { "name": "Nothing There", "risk": "ALEPH", "image": "nothing-raid2.webp", "raid_hp": 30000000000000000000, "time": 120, "raid_coins": 100000,
       "waves": [
         { "name": "Strange Egg", "risk": "ALEPH", "image": "nothing-raid1.webp", "hp": 10000000000000000000 }
       ],
       "drops": [
-        { "id": "r9-arma", "type": "weapon", "name": "Mimicry Blade", "image": "nothing-weapon.webp", "chance": 0.05, "bonus": 1.00 },
-        { "id": "r9-armadura", "type": "armor", "name": "Mimicry Suit", "image": "nothing-armor.webp", "chance": 0.10, "bonus": 0.50 },
-        { "id": "r9-gift", "type": "gift", "name": "Mimicry", "image": "nothing-gift.webp", "chance": 0.01, "bonus": 3.0 }
+        { "id": "r9-arma", "type": "weapon", "name": "Mimicry Blade", "image": "nothing-weapon.webp", "chance": 0.05, "bonus": 2.0 },
+        { "id": "r9-armadura", "type": "armor", "name": "Mimicry Suit", "image": "nothing-armor.webp", "chance": 0.10, "bonus": 1.0 },
+        { "id": "r9-gift", "type": "gift", "name": "Mimicry", "image": "nothing-gift.webp", "chance": 0.01, "bonus": 3.5 }
       ] },
-        { "name": "Apocalypse Bird", "risk": "ALEPH", "image": "apocalypse-bird.gif", "raid_hp": 1500000000000000000000, "time": 120,  "background": "apocabird-background5.webp", "raid_coins": 100000,
+        { "name": "Apocalypse Bird", "risk": "ALEPH", "image": "apocalypse-bird.gif", "raid_hp": 1500000000000000000000, "time": 120,  "background": "apocabird-background5.webp", "raid_coins": 1000000,
       "waves": [
         { "name": "Em uma floresta escura...", "risk": "???", "image": "apoca-gate.webp", "hp": 100000000000000000000, "background": "apocabird-background1.webp" },
         { "name": "Small Beak", "risk": "?", "image": "punishing-egg.webp", "hp": 300000000000000000000, "background": "apocabird-background2.webp" },

@@ -32,7 +32,7 @@ function fmt(n) {
 }
 
 function newState() {
-    return { version: 1, stage: 1, maxStage: 1, cleared: 0, equip: {}, raidEnk: 0, raidUp: {}, enk: 0, clickLvl: 0, agents: {}, hp: 0, maxHp: 0, auto: true };
+    return { version: 1, stage: 1, maxStage: 1, cleared: 0, equip: {}, raidEnk: 0, raidUp: {}, skills: {}, skillAuto: {}, enk: 0, clickLvl: 0, agents: {}, hp: 0, maxHp: 0, auto: true };
 }
 
 /* ---------- regras ---------- */
@@ -61,7 +61,7 @@ const agentLvl = (a) => S.agents[a.id] || 0;
 const agentCost = (a) => a.base_cost * Math.pow(C.agent_cost_growth, agentLvl(a));
 const agentMult = (a) => Math.pow(C.milestone.mult, Math.floor(agentLvl(a) / C.milestone.every));
 const raidUpBonus = () => (C.raid_upgrades || []).reduce((sum, u) => sum + (S.raidUp[u.id] || 0) * u.bonus, 0);
-const dmgMult = () => 1 + raidUpBonus() + dropList.reduce((sum, d) => sum + (S.equip[d.id] ? d.bonus : 0), 0);
+const dmgMult = () => (1 + raidUpBonus() + dropList.reduce((sum, d) => sum + (S.equip[d.id] ? d.bonus : 0), 0)) * skillMult("damage");
 const agentDmg = (a) => a.base_dps * agentLvl(a) * agentMult(a) * dmgMult();
 const dps = () => C.agents.reduce((sum, a) => sum + agentDmg(a), 0);
 
@@ -99,6 +99,53 @@ function rollDrops(boss) {
   return got;
 }
 
+function skillState(s) {
+  if (!S.skills[s.id]) S.skills[s.id] = { until: 0, readyAt: 0 };
+  return S.skills[s.id];
+}
+
+function skillMult(effect) {
+  const t = Date.now();
+  return (C.skills || []).reduce(
+    (m, s) => (s.effect === effect && t < skillState(s).until ? m * s.mult : m),
+    1
+  );
+}
+
+const skillUnlocked = (s) => S.cleared >= (s.unlock_stage || 0);
+
+function useSkill(s) {
+  if (!skillUnlocked(s)) return;
+  const st = skillState(s);
+  const t = Date.now();
+  if (t < st.readyAt) return;
+  if (s.cost_pct) S.enk -= S.enk * (s.cost_pct / 100);
+  st.until = t + s.duration * 1000;
+  st.readyAt = t + s.cooldown * 1000;
+  render();
+}
+
+function autoSkills() {
+  // na raid, só usa durante uma luta em andamento; o bônus de dinheiro não vale lá
+  if (inRaid && (!raid || raid.result)) return;
+  const t = Date.now();
+  (C.skills || []).forEach((s) => {
+    if (!S.skillAuto[s.id] || !skillUnlocked(s)) return;
+    if (inRaid && s.effect === "money") return;
+    if (t >= skillState(s).readyAt) useSkill(s);
+  });
+}
+const durText = (sec) => (sec >= 60 && sec % 60 === 0 ? sec / 60 + " min" : sec + " s");
+const clock = (sec) => (sec >= 60 ? Math.floor(sec / 60) + ":" + String(sec % 60).padStart(2, "0") : sec + "s");
+
+function skillText(s) {
+  if (s.description) return s.description;
+  const what = s.effect === "money" ? "o dinheiro ganho" : "o DPS total";
+  let t = "Aumenta " + what + " em " + s.mult + "x durante " + durText(s.duration) + ". Recarga: " + durText(s.cooldown) + ".";
+  if (s.cost_pct) t += " Custa " + s.cost_pct + "% do dinheiro atual.";
+  return t;
+}
+
 function spawn() {
   S.maxHp = stageHp(S.stage);
   S.hp = S.maxHp;
@@ -110,7 +157,7 @@ function damage(amount) {
   if (S.hp <= 0) {
     const last = C.stage.max_stage || Infinity;
     const finished = S.stage > S.cleared && S.stage === last;
-    S.enk += S.maxHp * C.stage.reward_ratio;
+    S.enk += S.maxHp * C.stage.reward_ratio * skillMult("money");
     S.cleared = Math.max(S.cleared, S.stage);
     S.maxStage = Math.max(S.maxStage, Math.min(S.stage + 1, last));
     if (S.auto && S.stage < last) S.stage += 1;
@@ -530,6 +577,88 @@ function renderEquip() {
   $("equip-empty").hidden = visible > 0;
 }
 
+let skillEls = [];
+
+function buildSkills() {
+  skillEls = [];
+  const hasAlly = (C.skills || []).some((s) => s.ally_image);
+  ["skills", "raid-skills"].forEach((boxId) => {
+    const box = $(boxId);
+    if (!box) return;
+    box.innerHTML = "";
+    box.classList.toggle("has-ally", hasAlly);
+    (C.skills || []).forEach((s) => {
+      if (boxId === "raid-skills" && s.effect === "money") return;
+      const wrap = document.createElement("div");
+      wrap.className = "skill";
+      wrap.innerHTML =
+        '<div class="skill-name"></div>' +
+        '<div class="skill-row">' +
+          '<button type="button" class="skill-box"><img alt="" draggable="false" hidden><span class="skill-timer" hidden></span></button>' +
+          '<button type="button" class="skill-auto" aria-pressed="false" title="Usar automaticamente quando disponível">AUTO</button>' +
+        '</div>' +
+        '<div class="skill-tip" role="tooltip"></div>' +
+        (s.ally_image ? '<img class="skill-ally" alt="" draggable="false" hidden>' : "");
+      wrap.querySelector(".skill-name").textContent = s.name;
+
+      const img = wrap.querySelector(".skill-box img");
+      if (s.image) {
+        img.src = "/static/img/" + s.image;
+        img.hidden = false;
+      }
+      img.addEventListener("error", () => { img.hidden = true; });
+
+      const ally = wrap.querySelector(".skill-ally");
+      if (ally) {
+        ally.src = "/static/img/" + s.ally_image;
+        ally.addEventListener("error", () => { ally.dataset.broken = "1"; ally.hidden = true; });
+      }
+
+      wrap.querySelector(".skill-box").addEventListener("click", () => useSkill(s));
+      wrap.querySelector(".skill-auto").addEventListener("click", () => {
+        S.skillAuto[s.id] = !S.skillAuto[s.id];
+        render();
+      });
+      box.appendChild(wrap);
+      skillEls.push({ wrap, s, unlocked: undefined });
+    });
+  });
+}
+
+function renderSkills() {
+  const t = Date.now();
+  skillEls.forEach((el) => {
+    const { wrap, s } = el;
+    const st = skillState(s);
+    const unlocked = skillUnlocked(s);
+    const active = unlocked && t < st.until;
+    const cooling = unlocked && t < st.readyAt;
+    const timer = wrap.querySelector(".skill-timer");
+    const autoBtn = wrap.querySelector(".skill-auto");
+    const on = !!S.skillAuto[s.id];
+
+    wrap.classList.toggle("locked", !unlocked);
+    wrap.classList.toggle("active", active);
+    wrap.classList.toggle("cooling", cooling);
+    timer.hidden = unlocked && !cooling;
+    if (!unlocked) timer.textContent = "Fase " + s.unlock_stage;
+    else if (cooling) timer.textContent = clock(Math.ceil(((active ? st.until : st.readyAt) - t) / 1000));
+
+    autoBtn.classList.toggle("on", on);
+    autoBtn.setAttribute("aria-pressed", on ? "true" : "false");
+    autoBtn.disabled = !unlocked;
+
+    if (el.unlocked !== unlocked) {
+      el.unlocked = unlocked;
+      wrap.querySelector(".skill-tip").textContent =
+        (unlocked ? "" : "Libera ao completar a fase " + s.unlock_stage + ". ") + skillText(s);
+    }
+
+    const ally = wrap.querySelector(".skill-ally");
+    if (ally) ally.hidden = !(active && ally.dataset.broken !== "1");
+  });
+}
+
 function render() {
   const m = monsterFor(S.stage);
   const img = $("sprite");
@@ -544,6 +673,7 @@ function render() {
   $("dps").textContent = fmt(dps());
   renderNav();
   renderEquip();
+  renderSkills();
   $("stage").textContent = S.stage + (isBoss(S.stage) ? " · " + Math.ceil(bossTimer) + "s restantes" : "");
   $("name").textContent = m.name;
   $("risk").textContent = m.risk + (isBoss(S.stage) ? " (chefe)" : "");
@@ -620,6 +750,7 @@ async function init() {
     });
   });
   buildEquip();
+  buildSkills();
   $("monster").addEventListener("click", () => {
     const d = clickDamage();
     record("click", d);
@@ -713,6 +844,7 @@ async function init() {
 
   setInterval(() => {
     if (!inGame) return;
+    autoSkills();
     if (inRaid) {
       tickRaid(TICK_MS / 1000);
     } else {
@@ -724,6 +856,21 @@ async function init() {
   }, TICK_MS);
   setInterval(() => save(false), AUTOSAVE_MS);
   window.addEventListener("beforeunload", () => save(true));
+    $("cheats-open").addEventListener("click", () => {
+    $("cheat-msg").textContent = "";
+    $("cheats-dialog").showModal();
+  });
+  $("cheats-close").addEventListener("click", () => $("cheats-dialog").close());
+  $("cheat-money-give").addEventListener("click", () => {
+    const v = Number(String($("cheat-money").value).trim().replace(",", "."));
+    if (!isFinite(v) || v <= 0) {
+      $("cheat-msg").textContent = "Digite um número maior que zero (ex.: 5000 ou 1e9).";
+      return;
+    }
+    S.enk += v;
+    $("cheat-msg").textContent = "+" + fmt(v) + " caixas de enkephalin adicionadas.";
+    render();
+  });
   render();
 }
 

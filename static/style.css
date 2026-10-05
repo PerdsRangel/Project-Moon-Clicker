@@ -319,3 +319,120 @@ main { max-width: 1260px; grid-template-columns: 1fr 340px 300px; }
 .raid-view h3 { margin: 1.5rem 0 0.75rem; font-size: 1.1rem; }
 #raid-shop { margin-bottom: 1.25rem; text-align: left; }
 .raid-coins-line strong { color: #a67ee0; }
+
+.battle { display: flex; gap: 0.75rem; align-items: stretch; }
+.battle .monster { flex: 1; width: auto; }
+.skills { display: flex; flex-direction: column; justify-content: space-between; gap: 0.5rem; }
+.skill { position: relative; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; width: 84px; }
+.skill-name { font-size: 0.72rem; color: var(--muted); text-align: center; line-height: 1.2; }
+.skill-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  padding: 0;
+  overflow: hidden;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  cursor: pointer;
+}
+.skill-box img { max-width: 100%; max-height: 100%; object-fit: contain; pointer-events: none; }
+.skill:not(.cooling) .skill-box:hover { border-color: var(--enk); }
+.skill.cooling .skill-box { cursor: not-allowed; }
+.skill.active .skill-box { border-color: var(--enk); box-shadow: 0 0 0 1px var(--enk); }
+.skill-box:focus-visible { outline: 2px solid var(--enk); outline-offset: 2px; }
+.skill-timer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(13, 15, 17, 0.65);
+  color: var(--text);
+  font-weight: 600;
+}
+.skill.active .skill-timer { background: rgba(13, 15, 17, 0.35); color: var(--enk); }
+.skill-timer[hidden] { display: none; }
+.skill-tip {
+  position: absolute;
+  top: 0;
+  left: calc(100% + 8px);
+  z-index: 10;
+  width: 220px;
+  padding: 0.6rem 0.75rem;
+  background: #0d0f11;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 0.85rem;
+  text-align: left;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s;
+}
+.skill:hover .skill-tip, .skill:focus-within .skill-tip { opacity: 1; }
+
+.skill { width: 100px; }
+.skill-row { display: flex; align-items: stretch; gap: 4px; }
+.skill-auto {
+  width: 22px;
+  padding: 0;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  cursor: pointer;
+}
+.skill-auto:not(:disabled):hover { border-color: var(--muted); }
+.skill-auto.on { border-color: var(--enk); color: var(--enk); }
+.skill-auto:disabled { opacity: 0.4; cursor: not-allowed; }
+.skill-auto:focus-visible { outline: 2px solid var(--enk); outline-offset: 2px; }
+
+.skill.locked { opacity: 0.55; }
+.skill.locked .skill-box { cursor: not-allowed; }
+.skill.locked .skill-timer { font-size: 0.8rem; }
+
+.skills.has-ally { padding-bottom: 88px; }
+.skill-ally {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 72px;
+  height: 80px;
+  object-fit: contain;
+  pointer-events: none;
+  animation: ally-in 0.25s ease-out;
+}
+@keyframes ally-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+#raid-fight { max-width: 780px; }
+#raid-fight .battle {
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 460px) 1fr;
+  gap: 0.75rem;
+}
+#raid-fight .skills { justify-self: end; }
+@media (max-width: 760px) {
+  #raid-fight .battle { grid-template-columns: auto 1fr; }
+}
+
+.cheats { bottom: 3.5rem; }
+.dlg-title { margin: 0 0 0.75rem; font-size: 1.1rem; }
+.cheat-row { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 0.5rem; }
+.cheat-row input {
+  padding: 0.45rem 0.6rem;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--text);
+  font: inherit;
+}
+.cheat-row input:focus-visible { outline: 2px solid var(--enk); outline-offset: 2px; }

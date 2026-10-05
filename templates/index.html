@@ -19,13 +19,16 @@
     <section class="arena">
       <nav id="stage-nav" class="stage-nav" aria-label="Fases"></nav>
       <p class="stage">Fase <span id="stage">1</span></p>
-      <button id="monster" class="monster" type="button" aria-label="Atacar a Abnormalidade">
-        <img id="sprite" class="sprite" alt="" draggable="false" hidden>
-        <span id="risk" class="risk"></span>
-        <span id="name" class="name"></span>
-        <span class="bar"><span id="hp-fill"></span></span>
-        <span id="hp-text" class="hp"></span>
-      </button>
+      <div class="battle">
+        <div id="skills" class="skills"></div>
+        <button id="monster" class="monster" type="button" aria-label="Atacar a Abnormalidade">
+          <img id="sprite" class="sprite" alt="" draggable="false" hidden>
+          <span id="risk" class="risk"></span>
+          <span id="name" class="name"></span>
+          <span class="bar"><span id="hp-fill"></span></span>
+          <span id="hp-text" class="hp"></span>
+        </button>
+      </div>
       <p class="hint">Clique na Abnormalidade para suprimi-la.</p>
       <label class="auto"><input id="auto" type="checkbox" checked> Avançar automaticamente</label>
       <button id="raid-open" class="prev" type="button">Boss Raid</button>
@@ -47,12 +50,24 @@
       <div id="equip" class="equip-list"></div>
     </section>
   </main>
+  <button id="cheats-open" class="reset cheats" type="button">Cheats</button>
   <button id="reset-open" class="reset" type="button">Resetar Save</button>
   <dialog id="reset-dialog">
     <p>Apagar todo o seu progresso e recomeçar do zero? Isso não pode ser desfeito.</p>
     <div class="dlg-actions">
       <button id="reset-cancel" type="button">Cancelar</button>
       <button id="reset-confirm" type="button" class="danger">Apagar progresso</button>
+    </div>
+  </dialog>
+  <dialog id="cheats-dialog">
+    <h2 class="dlg-title">Cheats</h2>
+    <label class="cheat-row">Dar Caixas de Enkephalin
+      <input id="cheat-money" type="text" inputmode="decimal" value="1000000">
+    </label>
+    <p id="cheat-msg" class="msg"></p>
+    <div class="dlg-actions">
+      <button id="cheats-close" type="button">Fechar</button>
+      <button id="cheat-money-give" type="button">Dar Enkephalin</button>
     </div>
   </dialog>
   <audio id="bgm" src="{{ url_for('static', filename='audio/backgroundmain.mp3') }}" loop preload="auto"></audio>
@@ -79,13 +94,16 @@
     </div>
     <div id="raid-fight" class="raid-view" hidden>
       <p class="stage">Tempo restante: <span id="raid-time">60</span>s <span id="raid-progress"></span></p>
-        <button id="raid-monster" class="monster" type="button" aria-label="Atacar o inimigo">
-        <img id="raid-sprite" class="sprite" alt="" draggable="false" hidden>
-        <span id="raid-risk" class="risk"></span>
-        <span id="raid-name" class="name"></span>
-        <span class="bar"><span id="raid-hp-fill"></span></span>
-        <span id="raid-hp-text" class="hp"></span>
-      </button>
+      <div class="battle">
+        <div id="raid-skills" class="skills"></div>
+          <button id="raid-monster" class="monster" type="button" aria-label="Atacar o inimigo">
+            <img id="raid-sprite" class="sprite" alt="" draggable="false" hidden>
+            <span id="raid-risk" class="risk"></span>
+            <span id="raid-name" class="name"></span>
+            <span class="bar"><span id="raid-hp-fill"></span></span>
+            <span id="raid-hp-text" class="hp"></span>
+          </button>
+        </div>
       <p id="raid-result" class="raid-result"></p>
       <label class="auto raid-auto"><input id="raid-auto" type="checkbox"> Reiniciar Automaticamente</label>
       <div class="raid-actions">
