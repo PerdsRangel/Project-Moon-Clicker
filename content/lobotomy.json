@@ -18,7 +18,7 @@
   ],
 
   "raid_upgrades": [
-    { "id": "raid-dano-1", "name": "Treinamento de Agentes (Basico)", "base_cost": 10, "cost_growth": 1.5, "bonus": 0.05, "max_level": 50 },
+    { "id": "raid-dano-1", "name": "Treinamento de Agentes (Basico)", "base_cost": 10, "cost_growth": 1.5, "bonus": 0.05, "max_level": 30 },
     { "id": "raid-dano-2", "name": "Treinamento de Agentes (Médio)", "base_cost": 500, "cost_growth": 1.6, "bonus": 0.10, "max_level": 25 },
     { "id": "raid-dano-3", "name": "Treinamento de Agentes (Avançado)", "base_cost": 3000, "cost_growth": 1.8, "bonus": 0.25, "max_level": 10 },
     { "id": "raid-dano-4", "name": "Treinamento com time de Disciplina", "base_cost": 50000, "cost_growth": 2.0, "bonus": 0.50, "max_level": 5 },

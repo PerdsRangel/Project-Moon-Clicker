@@ -215,7 +215,7 @@ function tickBoss(dt) {
 function buildShop() {
   const shop = $("shop");
   shop.innerHTML = "";
-  const rows = [{ id: "click", label: "Treinamento de supressão" }].concat(
+  const rows = [{ id: "click", label: "Treino de Supressão" }].concat(
     C.agents.map((a) => ({ id: a.id, label: a.name }))
   );
   rows.forEach((r) => {
@@ -742,7 +742,7 @@ function render() {
 
   setRow(
     "click",
-    "Treinamento de supressão",
+    "Treino de Supressão",
     "Nível " + S.clickLvl + " · " + fmt(clickDamage()) + " dano/clique · " + fmtPct(share("click")) + " do dano",
     rowPlan("click"),
     clickMult() > 1 ? fmtMult(clickMult()) + "x - Bônus" : ""
