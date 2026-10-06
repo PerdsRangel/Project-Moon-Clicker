@@ -274,10 +274,10 @@
         { "name": "Wand Apostle", "risk": "???", "image": "apostle1.webp", "hp": 1000000000000000000000, "background": "religion-background.png" },
         { "name": "Spear Apostle", "risk": "???", "image": "apostle2.webp", "hp": 1000000000000000000000, "background": "religion-background.png" },
         { "name": "Scythe Apostle", "risk": "???", "image": "apostle3.webp", "hp": 1000000000000000000000, "background": "religion-background.png" },
-        { "name": "Spear Apostle", "risk": "???", "image": "apostle2.webp", "hp": 1000000000000000000000, "background": "religion-background.png" },
-        { "name": "Scythe Apostle", "risk": "???", "image": "apostle3.webp", "hp": 1000000000000000000000, "background": "religion-background.png" },
-        { "name": "Wand Apostle", "risk": "???", "image": "apostle1.webp", "hp": 1000000000000000000000, "background": "religion-background.png" },
-        { "name": "Spear Apostle", "risk": "???", "image": "apostle2.webp", "hp": 1000000000000000000000, "background": "religion-background.png" }
+        { "name": "Spear Apostle", "risk": "???", "image": "apostle2.webp", "hp": 1200000000000000000000, "background": "religion-background.png" },
+        { "name": "Scythe Apostle", "risk": "???", "image": "apostle3.webp", "hp": 1300000000000000000000, "background": "religion-background.png" },
+        { "name": "Wand Apostle", "risk": "???", "image": "apostle1.webp", "hp": 1500000000000000000000, "background": "religion-background.png" },
+        { "name": "Guardian Apostle", "risk": "???", "image": "apostle2.webp", "hp": 3000000000000000000000, "background": "religion-background.png" }
       ],
       "drops": [
         { "id": "r10-arma", "type": "weapon", "name": "Paradise Weapon", "image": "white-weapon.webp", "chance": 0.05, "bonus": 25.0 },
