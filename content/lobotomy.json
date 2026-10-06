@@ -6,7 +6,7 @@
   "base_cost": 5,
   "cost_growth": 1.08,
   "milestone_every": 25,
-  "milestone_mult": 3,
+  "milestone_mult": 2,
   "dps_share": 0.04
   },
   "milestone": { "every": 25, "mult": 3 },
@@ -100,8 +100,8 @@
     { "id": "raid-dano-2", "name": "Treinamento de Agentes (Médio)", "base_cost": 500, "cost_growth": 1.6, "bonus": 0.10, "max_level": 25 },
     { "id": "raid-dano-3", "name": "Treinamento de Agentes (Avançado)", "base_cost": 3000, "cost_growth": 1.8, "bonus": 0.25, "max_level": 10 },
     { "id": "raid-dano-4", "name": "Treinamento com time de Disciplina", "base_cost": 50000, "cost_growth": 2.0, "bonus": 0.50, "max_level": 5 },
-    { "id": "raid-dano-5", "name": "Agentes de Rank V", "base_cost": 1000000, "cost_growth": 2.5, "bonus": 1.0, "max_level": 3 },
-    { "id": "raid-dano-6", "name": "Agentes com Equipamentos ALEPH", "base_cost": 100000000, "cost_growth": 2.5, "bonus": 10.0, "max_level": 1 }
+    { "id": "raid-dano-5", "name": "Funcionários Equipados ", "base_cost": 1000000, "cost_growth": 2.5, "bonus": 1.0, "max_level": 3 },
+    { "id": "raid-dano-6", "name": "Funcionários com Equipamentos ALEPH", "base_cost": 100000000, "cost_growth": 2.5, "bonus": 10.0, "max_level": 1 }
   ],
 
   "ordeals": [
