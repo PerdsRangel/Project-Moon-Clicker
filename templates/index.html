@@ -29,9 +29,10 @@
           <span id="hp-text" class="hp"></span>
         </button>
       </div>
-      <p class="hint">Clique na Abnormalidade para suprimi-la.</p>
+      <p id="hint" class="hint">Clique na Abnormalidade para suprimi-la.</p>
       <label class="auto"><input id="auto" type="checkbox" checked> Avançar automaticamente</label>
       <button id="raid-open" class="prev" type="button">Boss Raid</button>
+      <button id="dept-open" class="prev" type="button">Departamentos</button>
     </section>
 
     <section class="shop">
@@ -65,6 +66,8 @@
       <input id="cheat-money" type="text" inputmode="decimal" value="1000000">
     </label>
     <p id="cheat-msg" class="msg"></p>
+    <button id="cheat-angela" class="prev" type="button">Rever falas da Angela</button>
+    <button id="cheat-ordeals" class="prev" type="button">Refazer Ordeals</button>
     <div class="dlg-actions">
       <button id="cheats-close" type="button">Fechar</button>
       <button id="cheat-money-give" type="button">Dar Enkephalin</button>
@@ -117,6 +120,25 @@
     </div>
   </div>
   <audio id="bgm-raid" src="{{ url_for('static', filename='audio/raidmusic.mp3') }}" loop preload="auto"></audio>
+  <div id="dept" class="dept" hidden>
+    <div class="dept-view">
+      <h2>Departamentos</h2>
+      <p class="dept-points"><strong id="dept-points">0</strong> pontos disponíveis <span id="dept-earned"></span></p>
+      <p class="dept-hint">Ganhe pontos ao derrotar fases pela primeira vez (as fases de chefe dão mais). Você pode redistribuir tudo quando quiser.</p>
+      <div id="dept-list"></div>
+      <div class="dept-actions">
+        <button id="dept-respec" class="prev" type="button">Redistribuir pontos</button>
+        <button id="dept-close" class="prev" type="button">Voltar ao jogo</button>
+      </div>
+    </div>
+  </div>
+  <div id="angela" class="angela" hidden role="status">
+    <img id="angela-img" class="angela-img" alt="" draggable="false" hidden>
+    <div class="angela-body">
+      <div id="angela-name" class="angela-name">Angela</div>
+      <p class="angela-text"><span id="angela-typed"></span><span id="angela-rest" class="angela-rest"></span></p>
+    </div>
+  </div>
   <script src="{{ url_for('static', filename='game.js') }}"></script>
 </body>
 </html>

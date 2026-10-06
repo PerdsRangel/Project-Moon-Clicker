@@ -11,6 +11,84 @@
   },
   "milestone": { "every": 25, "mult": 3 },
 
+    "angela": {
+    "name": "Angela",
+    "image": "angela.webp",
+    "lines": [
+      { "id": "start", "when": "start", "text": [
+        "Bem-vindo à Lobotomy Corporation, {jogador}.",
+        "Nosso trabalho é simples: extrair Enkephalin das Abnormalidades. Comece suprimindo a primeira delas."
+      ] },
+      { "id": "clear-5", "when": "clear", "stage": 5, "text": "Seu primeiro chefe de contenção foi derrotado. Um começo aceitável." },
+      { "id": "clear-10", "when": "clear", "stage": 10, "text": [
+        "Dez fases concluídas. A Equipe de Treinamento agora está à sua disposição.",
+        "Também autorizei o uso do E.G.O Equipment. Use-o quando precisar de dano extra."
+      ] },
+      { "id": "clear-35", "when": "clear", "stage": 35, "text": "Greed foi liberada. Enkephalin extra para a empresa. E para você." },
+      { "id": "clear-50", "when": "clear", "stage": 50, "text": "A Equipe Coelho está autorizada a entrar em campo. Não a deixe esperando." },
+      { "id": "raid-1", "when": "raid_win", "count": 1, "text": "Uma Raid concluída. As Caixas de Enkephalin Raid podem ser trocadas na loja da Raid." },
+      { "id": "drop-1", "when": "drop", "text": "Um equipamento foi extraído. Estar bem equipado também faz parte do trabalho." },
+      { "id": "dept-1", "when": "dept", "text": "Os departamentos aguardam suas ordens. Os pontos vêm do progresso, então gaste-os com sabedoria." },
+      { "id": "clear-100", "when": "clear", "stage": 100, "text": [
+        "Cem fases. Todas as Abnormalidades foram contidas.",
+        "A Lobotomy Corporation agradece, {jogador}. Por enquanto."
+      ] }
+    ]
+  },
+
+    "department_points": { "per_stage": 1, "per_boss_stage": 2 },
+  "departments": [
+    { "id": "control", "name": "Equipe de Controle", "sephirah": "Malkuth", "image": "malkuth.webp", "unlock_stage": 0, "chain_level": 3, "color": "#8a6d3b",
+      "description": "Mais enkephalin por Abnormalidade derrotada.",
+      "nodes": [
+        { "id": "control-1", "name": "Triagem de Recursos", "effect": "money", "bonus": 0.10, "max_level": 5, "cost": 1, "cost_step": 0 },
+        { "id": "control-2", "name": "Extração Eficiente", "effect": "money", "bonus": 0.15, "max_level": 5, "cost": 2, "cost_step": 1 },
+        { "id": "control-3", "name": "Fluxo Contínuo", "effect": "money", "bonus": 0.30, "max_level": 3, "cost": 5, "cost_step": 2 }
+      ] },
+    { "id": "training", "name": "Equipe de Treinamento", "sephirah": "Hod", "image": "hod.webp", "unlock_stage": 10, "chain_level": 3, "color": "#d9822b",
+      "description": "Agentes mais baratos de contratar e melhorar.",
+      "nodes": [
+        { "id": "training-1", "name": "Instrução Básica", "effect": "agent_cost", "bonus": 0.03, "max_level": 5, "cost": 1, "cost_step": 0 },
+        { "id": "training-2", "name": "Treino Avançado", "effect": "agent_cost", "bonus": 0.04, "max_level": 5, "cost": 2, "cost_step": 1 },
+        { "id": "training-3", "name": "Método de Elite", "effect": "agent_cost", "bonus": 0.05, "max_level": 3, "cost": 5, "cost_step": 2 }
+      ] },
+    { "id": "welfare", "name": "Equipe de Bem-estar", "sephirah": "Chesed", "image": "chesed.webp", "unlock_stage": 20, "chain_level": 3, "color": "#3b7fd4",
+      "description": "Habilidades recarregam mais rápido.",
+      "nodes": [
+        { "id": "welfare-1", "name": "Pausa para o Café", "effect": "cooldown", "bonus": 0.02, "max_level": 5, "cost": 1, "cost_step": 0 },
+        { "id": "welfare-2", "name": "Cuidados Médicos", "effect": "cooldown", "bonus": 0.03, "max_level": 5, "cost": 2, "cost_step": 1 },
+        { "id": "welfare-3", "name": "Recuperação Total", "effect": "cooldown", "bonus": 0.05, "max_level": 3, "cost": 5, "cost_step": 2 }
+      ] },
+    { "id": "safety", "name": "Equipe de Segurança", "sephirah": "Netzach", "image": "netzach.webp", "unlock_stage": 30, "chain_level": 3, "color": "#3fa05a",
+      "description": "Mais tempo para derrotar chefes e raids.",
+      "nodes": [
+        { "id": "safety-1", "name": "Protocolos de Contenção", "effect": "boss_time", "bonus": 2, "max_level": 5, "cost": 1, "cost_step": 0 },
+        { "id": "safety-2", "name": "Resposta Rápida", "effect": "boss_time", "bonus": 3, "max_level": 5, "cost": 2, "cost_step": 1 },
+        { "id": "safety-3", "name": "Contenção Total", "effect": "boss_time", "bonus": 5, "max_level": 3, "cost": 5, "cost_step": 2 }
+      ] },
+    { "id": "information", "name": "Equipe de Informação", "sephirah": "Yesod", "image": "yesod.webp", "unlock_stage": 40, "chain_level": 3, "color": "#8e5bd4",
+      "description": "Maior chance de drop dos equipamentos das raids.",
+      "nodes": [
+        { "id": "information-1", "name": "Coleta de Dados", "effect": "drop_chance", "bonus": 0.05, "max_level": 5, "cost": 1, "cost_step": 0 },
+        { "id": "information-2", "name": "Análise Profunda", "effect": "drop_chance", "bonus": 0.10, "max_level": 5, "cost": 2, "cost_step": 1 },
+        { "id": "information-3", "name": "Arquivo Completo", "effect": "drop_chance", "bonus": 0.15, "max_level": 3, "cost": 5, "cost_step": 2 }
+      ] },
+    { "id": "disciplinary", "name": "Equipe Disciplinar", "sephirah": "Gebura", "image": "gebura.webp", "unlock_stage": 50, "chain_level": 3, "color": "#c0392b",
+      "description": "Mais dano total.",
+      "nodes": [
+        { "id": "disciplinary-1", "name": "Treino de Combate", "effect": "damage", "bonus": 0.05, "max_level": 5, "cost": 1, "cost_step": 0 },
+        { "id": "disciplinary-2", "name": "Armamento Pesado", "effect": "damage", "bonus": 0.08, "max_level": 5, "cost": 2, "cost_step": 1 },
+        { "id": "disciplinary-3", "name": "Fúria Disciplinada", "effect": "damage", "bonus": 0.15, "max_level": 3, "cost": 5, "cost_step": 2 }
+      ] },
+    { "id": "command", "name": "Comando Central", "sephirah": "Tiphereth", "image": "tiphereth.webp", "unlock_stage": 70, "chain_level": 3, "color": "#d9b72b",
+      "description": "Mais ganho enquanto você está fora do jogo.",
+      "nodes": [
+        { "id": "command-1", "name": "Turno da Noite", "effect": "offline", "bonus": 0.05, "max_level": 5, "cost": 1, "cost_step": 0 },
+        { "id": "command-2", "name": "Operação Contínua", "effect": "offline", "bonus": 0.05, "max_level": 5, "cost": 2, "cost_step": 1 },
+        { "id": "command-3", "name": "Gestão Automática", "effect": "offline", "bonus": 0.10, "max_level": 3, "cost": 5, "cost_step": 2 }
+      ] }
+  ],
+
     "skills": [
     { "id": "skill-dps-1", "name": "E.G.O Equipment", "image": "butterfly-armor.webp", "effect": "damage", "mult": 3, "duration": 15, "cooldown": 30, "description": "Aumenta seu DPS em 3x durante 10s.", "unlock_stage": 10 },
     { "id": "skill-money", "name": "Greed", "image": "greed-skill.webp", "effect": "money", "mult": 3, "duration": 30, "cooldown": 120, "description": "Aumenta seu ganho de Enkephalin em 3x durante 30s.", "unlock_stage": 35 },
@@ -24,6 +102,79 @@
     { "id": "raid-dano-4", "name": "Treinamento com time de Disciplina", "base_cost": 50000, "cost_growth": 2.0, "bonus": 0.50, "max_level": 5 },
     { "id": "raid-dano-5", "name": "Agentes de Rank V", "base_cost": 1000000, "cost_growth": 2.5, "bonus": 1.0, "max_level": 3 },
     { "id": "raid-dano-6", "name": "Agentes com Equipamentos ALEPH", "base_cost": 100000000, "cost_growth": 2.5, "bonus": 10.0, "max_level": 1 }
+  ],
+
+  "ordeals": [
+    { "id": "ordeal-dawn", "tier": "Madrugada", "name": "Ordeal of Dawn", "color": "Verde", "hex": "#3fa05a",
+      "stage": 24, "rules": ["green"], "time": 60, "points": 10, "image": "dawn-image.webp", "background": "ordeals-background.png",
+      "enemies": [
+        { "name": "Worm", "risk": "Dawn", "count": 3, "hp_mult": 1.2, "image": "dawn-enemy1.webp" },
+        { "name": "Clown", "risk": "Dawn", "count": 3, "hp_mult": 1.2, "image": "dawn-enemy2.webp" },
+        { "name": "Doubt Robot", "risk": "Dawn", "count": 3, "hp_mult": 1.2, "image": "dawn-enemy3.webp" },
+        { "name": "Fruit of Understanding", "risk": "Dawn", "hp_mult": 4.8, "image": "dawn-enemy4.webp" }
+      ],
+      "say": {
+        "warn": "{jogador}, detectei um Ordeal se aproximando: a Madrugada. Não será possível avançar até que ele seja superado.",
+        "start": "O Ordeal da Madrugada começou. Eles são numerosos, mas frágeis. Mantenha o ritmo.",
+        "win": "A Madrugada foi superada. O caminho está livre, {jogador}.",
+        "lose": ["A Madrugada prevaleceu desta vez. Reorganize-se.", "Isso foi apenas o começo, {jogador}. Tente de novo."]
+      },
+      "drops": [ { "id": "ordeal-dawn-gift", "type": "gift", "name": "Ordeal of Dawn Derrotada", "image": "ordeal-gift.png", "chance": 1, "bonus": 0.50 } ] },
+
+    { "id": "ordeal-noon", "tier": "Meio-dia", "name": "Ordeal of Noon", "color": "Carmesim", "hex": "#c0392b",
+      "stage": 49, "rules": ["crimson"], "time": 25, "points": 15, "image": "noon-image.webp", "background": "ordeals-background.png",
+      "enemies": [
+        { "name": "Tenda", "risk": "Noon", "hp_mult": 2.4, "image": "noon-enemy1.webp" },
+        { "name": "Clown?", "risk": "Noon", "hp_mult": 2.8, "image": "noon-enemy2.webp" },
+        { "name": "Mechanical Golem", "risk": "Noon", "hp_mult": 3.2, "image": "noon-enemy3.gif" },
+        { "name": "Sweeper 1", "risk": "Noon", "hp_mult": 3.3, "image": "noon-enemy4.webp" },
+        { "name": "Sweeper 2", "risk": "Noon", "hp_mult": 3.4, "image": "noon-enemy5.webp" },
+        { "name": "Sweeper 3", "risk": "Noon", "hp_mult": 3.5, "image": "noon-enemy6.webp" },
+        { "name": "Grant Us Love", "risk": "Noon", "hp_mult": 4, "image": "noon-enemy7.webp" }
+      ],
+      "say": {
+        "warn": "O Meio-dia chegou, {jogador}. Uma Ordeal Crimson bloqueia a fase 50. Eles são poucos, mas não perdoam a hesitação.",
+        "start": "Ordeal Carmesim iniciado. O tempo é curto.",
+        "win": "O Meio-dia foi superado. Impressionante, {jogador}.",
+        "lose": ["O tempo se esgotou. O Carmesim não espera.", "Mais rápido, {jogador}. Tente novamente."]
+      },
+      "drops": [ { "id": "ordeal-noon-gift", "type": "gift", "name": "Ordeal of Noon Derrotada", "image": "ordeal-gift.png", "chance": 1, "bonus": 1 } ] },
+
+    { "id": "ordeal-dusk", "tier": "Entardecer", "name": "Ordeal of Dusk", "color": "Violeta", "hex": "#8e5bd4",
+      "stage": 74, "rules": ["violet"], "time": 60, "points": 20, "image": "dusk-image.webp", "background": "ordeals-background.png",
+      "enemies": [
+        { "name": "Big Worm", "risk": "Dusk", "hp_mult": 2.4, "image": "dusk-enemy1.webp" },
+        { "name": "Amalgamation Clown", "risk": "Dusk", "hp_mult": 2.4, "image": "dusk-enemy2.webp" },
+        { "name": "Robot Summon (Doubt)", "risk": "Dusk", "hp_mult": 2.4, "image": "dawn-enemy3.webp" },
+        { "name": "Robot Summon (Noon)", "risk": "Dusk", "hp_mult": 2.4, "image": "noon-enemy3.gif" },
+        { "name": "Where To Reach", "risk": "Dusk", "hp_mult": 4.8, "image": "dusk-enemy3.webp" }
+      ],
+      "say": {
+        "warn": "O Entardecer se aproxima. Uma Ordeal Dusk bloqueia a fase 75. Alguma de suas habilidades será silenciada durante a luta.",
+        "start": "Ordeal Violeta iniciado. Uma habilidade foi selada. Adapte-se.",
+        "win": "O Entardecer foi superado, {jogador}. Restam poucas horas.",
+        "lose": ["As habilidades seladas pesaram. Planeje melhor.", "O Entardecer venceu. Tente de novo, {jogador}."]
+      },
+      "drops": [ { "id": "ordeal-dusk-gift", "type": "gift", "name": "Ordeal of Dusk Derrotada", "image": "ordeal-gift.png", "chance": 1, "bonus": 2 } ] },
+
+    { "id": "ordeal-midnight", "tier": "Meia-noite", "name": "Ordeal of Midnight", "color": "Âmbar", "hex": "#d9822b",
+      "stage": 99, "rules": ["amber"], "time": 90, "points": 30, "image": "midnight-image.webp", "background": "ordeals-background.png",
+      "enemies": [
+        { "name": "Big Worm", "risk": "Midnight", "count": 2, "hp_mult": 0.8, "image": "dusk-enemy1.webp" },
+        { "name": "Eternal Meal", "risk": "Midnight", "hp_mult": 1, "image": "midnight-enemy1.webp" },
+        { "name": "Last Helix", "risk": "Midnight", "hp_mult": 1, "image": "midnight-enemy2.gif" },
+        { "name": "Red Shrine", "risk": "Midnight", "hp_mult": 1.2, "image": "midnight-enemy3.webp" },
+        { "name": "White Shrine", "risk": "Midnight", "hp_mult": 1.3, "image": "midnight-enemy4.webp" },
+        { "name": "Black Shrine", "risk": "Midnight", "hp_mult": 1.4, "image": "midnight-enemy5.webp" },
+        { "name": "Pale Shrine", "risk": "Midnight", "hp_mult": 1.5, "image": "midnight-enemy6.webp" }
+      ],
+      "say": {
+        "warn": "A Meia-noite chegou, {jogador}. O Ordeal of Midnight guarda a fase 100. Cada onda será mais forte que a anterior.",
+        "start": "O Ordeal da Meia-noite começou. Esta é a última barreira, ou não.",
+        "win": "A Meia-noite foi superada. Todas as fases estão concluídas, {jogador}. A empresa está satisfeita.",
+        "lose": ["A escuridão prevaleceu. Mas a noite não dura para sempre.", "Mais uma tentativa, {jogador}."]
+      },
+      "drops": [ { "id": "ordeal-midnight-gift", "type": "gift", "name": "Ordeal of Midnight Derrotada", "image": "ordeal-gift.png", "chance": 1, "bonus": 3 } ] }
   ],
 
   "raid_time": 60,

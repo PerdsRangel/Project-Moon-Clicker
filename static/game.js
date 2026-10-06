@@ -21,6 +21,13 @@ let raidSession = null;    // resumo da sessão de farm do boss atual
 let raidSessionId = 0;
 let lastSave = 0;          // última gravação rápida (limita as gravações em vitórias seguidas)
 let logKey = "";
+let inDept = false;        // a tela de Departamentos está aberta?
+let deptB = {};            // bônus somados dos departamentos, por tipo de efeito
+let deptCards = [];
+let angelaQueue = [];      // falas esperando para aparecer
+let angelaShowing = false;
+let angelaTimer = null;
+let angelaType = null;
 
 const $ = (id) => document.getElementById(id);
 
@@ -35,7 +42,7 @@ function fmt(n) {
 }
 
 function newState() {
-    return { version: 1, stage: 1, maxStage: 1, cleared: 0, equip: {}, raidEnk: 0, raidUp: {}, skills: {}, skillAuto: {}, enk: 0, clickLvl: 0, agents: {}, hp: 0, maxHp: 0, auto: true };
+    return { version: 1, stage: 1, maxStage: 1, cleared: 0, equip: {}, raidEnk: 0, raidUp: {}, skills: {}, skillAuto: {}, seen: {}, raidWins: 0, deptOpened: false, dept: {}, enk: 0, clickLvl: 0, agents: {}, hp: 0, maxHp: 0, auto: true, ordeals: {}, };
 }
 
 /* ---------- regras ---------- */
@@ -64,7 +71,7 @@ const agentLvl = (a) => S.agents[a.id] || 0;
 const agentCost = (a) => a.base_cost * Math.pow(C.agent_cost_growth, agentLvl(a));
 const agentMult = (a) => Math.pow(C.milestone.mult, Math.floor(agentLvl(a) / C.milestone.every));
 const raidUpBonus = () => (C.raid_upgrades || []).reduce((sum, u) => sum + (S.raidUp[u.id] || 0) * u.bonus, 0);
-const dmgMult = () => (1 + raidUpBonus() + dropList.reduce((sum, d) => sum + (S.equip[d.id] ? d.bonus : 0), 0)) * skillMult("damage");
+const dmgMult = () => (1 + raidUpBonus() + dB("damage") + dropList.reduce((sum, d) => sum + (S.equip[d.id] ? d.bonus : 0), 0)) * skillMult("damage");
 const agentDmg = (a) => a.base_dps * agentLvl(a) * agentMult(a) * dmgMult();
 const dps = () => C.agents.reduce((sum, a) => sum + agentDmg(a), 0);
 
@@ -86,15 +93,19 @@ const raidOpen = (unlock) => S.cleared >= unlock;
 
 function allDrops() {
   const every = C.raid_unlock_every || 10;
-  return (C.raidbosses || []).flatMap((b, i) =>
+  const raids = (C.raidbosses || []).flatMap((b, i) =>
     b.drops.map((d) => Object.assign({ from: b.name, unlock: (i + 1) * every }, d))
   );
+  const ordeals = (C.ordeals || []).flatMap((o) =>
+    (o.drops || []).map((d) => Object.assign({ from: o.name, unlock: o.stage }, d))
+  );
+  return raids.concat(ordeals);
 }
 
 function rollDrops(boss) {
   const got = [];
   boss.drops.forEach((d) => {
-    if (!S.equip[d.id] && Math.random() < d.chance) {
+    if (!S.equip[d.id] && Math.random() < d.chance * (1 + dB("drop_chance"))) {
       S.equip[d.id] = true;
       got.push(d);
     }
@@ -110,7 +121,7 @@ function skillState(s) {
 function skillMult(effect) {
   const t = Date.now();
   return (C.skills || []).reduce(
-    (m, s) => (s.effect === effect && t < skillState(s).until ? m * s.mult : m),
+    (m, s) => (s.effect === effect && t < skillState(s).until && !(raid && raid.sealed === s.id) ? m * s.mult : m),
     1
   );
 }
@@ -118,13 +129,14 @@ function skillMult(effect) {
 const skillUnlocked = (s) => S.cleared >= (s.unlock_stage || 0);
 
 function useSkill(s) {
+  if (raid && raid.sealed === s.id) return;
   if (!skillUnlocked(s)) return;
   const st = skillState(s);
   const t = Date.now();
   if (t < st.readyAt) return;
   if (s.cost_pct) S.enk -= S.enk * (s.cost_pct / 100);
   st.until = t + s.duration * 1000;
-  st.readyAt = t + s.cooldown * 1000;
+  st.readyAt = t + s.cooldown * 1000 * Math.max(0.3, 1 - dB("cooldown"));
   render();
 }
 
@@ -152,7 +164,7 @@ function skillText(s) {
 function spawn() {
   S.maxHp = stageHp(S.stage);
   S.hp = S.maxHp;
-  bossTimer = isBoss(S.stage) ? C.stage.boss_time : 0;
+  bossTimer = isBoss(S.stage) ? C.stage.boss_time + dB("boss_time") : 0;
 }
 
 function damage(amount) {
@@ -160,7 +172,7 @@ function damage(amount) {
   if (S.hp <= 0) {
     const last = C.stage.max_stage || Infinity;
     const finished = S.stage > S.cleared && S.stage === last;
-    S.enk += S.maxHp * C.stage.reward_ratio * skillMult("money");
+    S.enk += S.maxHp * C.stage.reward_ratio * skillMult("money") * (1 + dB("money"));
     S.cleared = Math.max(S.cleared, S.stage);
     S.maxStage = Math.max(S.maxStage, Math.min(S.stage + 1, last));
     if (S.auto && S.stage < last) S.stage += 1;
@@ -251,7 +263,7 @@ function plan(base, growth, lvl) {
 function rowPlan(id) {
   if (id === "click") return plan(C.click.base_cost, C.click.cost_growth, S.clickLvl);
   const a = C.agents.find((x) => x.id === id);
-  return plan(a.base_cost, C.agent_cost_growth, agentLvl(a));
+  return plan(a.base_cost * Math.max(0.2, 1 - dB("agent_cost")), C.agent_cost_growth, agentLvl(a));
 }
 
 function buy(id) {
@@ -361,7 +373,7 @@ function startRaid(boss, keep) {
   }]);
   // carrega os fundos antes, para não piscar na troca de inimigo
   if (!keep) enemies.forEach((e) => { if (e.background) new Image().src = "/static/img/" + encodeURIComponent(e.background); });
-  raid = { boss, enemies, index: 0, maxHp: 0, hp: 0, time: boss.time || C.raid_time || 60, result: null, drops: [], coins: 0, restartIn: null };
+  raid = { boss, enemies, index: 0, maxHp: 0, hp: 0, time: (boss.time || C.raid_time || 60) + dB("boss_time"), result: null, drops: [], coins: 0, restartIn: null };
   setRaidEnemy();
   render();
 }
@@ -377,6 +389,8 @@ function raidDamage(amount) {
   }
   raid.hp = 0;
   raid.result = "win";
+  if (raid.kind === "ordeal") { finishOrdeal(); return; }
+  S.raidWins = (S.raidWins || 0) + 1;
   raid.coins = raid.boss.raid_coins || 5;
   S.raidEnk += raid.coins;
   raid.drops = rollDrops(raid.boss);
@@ -387,7 +401,7 @@ function raidDamage(amount) {
 function tickRaid(dt) {
   if (!raid) return;
   if (raid.result) {
-    if (raidAuto) startRaid(raid.boss, true); // reinicia na hora
+    if (raidAuto && raid.kind !== "ordeal") startRaid(raid.boss, true); // reinicia na hora
     return;
   }
   raidDamage(dps() * dt);
@@ -395,7 +409,11 @@ function tickRaid(dt) {
   if (raid.result === null && raid.time <= 0) {
     raid.time = 0;
     raid.result = "lose";
-    logRaid("lose");
+    if (raid.kind === "ordeal") {
+      if (raid.ordeal.say) angelaSay(raid.ordeal.say.lose, true);
+    } else {
+      logRaid("lose");
+    }
   }
 }
 
@@ -492,32 +510,120 @@ function renderRaidLog() {
     (items ? " · Itens: " + items : "");
 }
 
+const RULE_TEXT = {
+  green: "Muitos inimigos em sequência.",
+  crimson: "O tempo é curto.",
+  violet: "Uma habilidade foi selada.",
+  amber: "Cada onda é mais forte que a anterior.",
+};
+
+function ordealRules(r) {
+  let t = (r.ordeal.rules || []).map((k) => RULE_TEXT[k] || k).join(" ");
+  if (r.sealed) {
+    const s = (C.skills || []).find((x) => x.id === r.sealed);
+    t += " Selada: " + (s ? s.name : r.sealed) + ".";
+  }
+  return t;
+}
+
+function angelaSay(t, pickOne) {
+  if (!t) return;
+  let parts = Array.isArray(t) ? t : [t];
+  if (pickOne) parts = [parts[Math.floor(Math.random() * parts.length)]];
+  parts.forEach((x) => angelaQueue.push(x.replace(/\{jogador\}/g, () => player)));
+  if (!angelaShowing && angelaQueue.length) showNextAngela();
+}
+
+// o Ordeal da fase atual, se ainda não foi vencido (bloqueia o avanço)
+function pendingOrdeal() {
+  return (C.ordeals || []).find((o) => o.stage === S.stage && !S.ordeals[o.id]) || null;
+}
+
+function startOrdeal(o) {
+  const base = stageHp(o.stage);
+  const amber = (o.rules || []).includes("amber");
+  const list = (o.enemies || []).flatMap((e) =>
+    Array.from({ length: e.count || 1 }, (_, k) =>
+      Object.assign({}, e, { name: (e.count || 1) > 1 ? e.name + " " + (k + 1) : e.name })
+    )
+  );
+  const enemies = list.map((e, i) => ({
+    name: e.name,
+    risk: e.risk || o.color,
+    image: e.image,
+    isBoss: i === list.length - 1,
+    hp: base * (e.hp_mult || 0.1) * (amber ? 1 + 0.3 * i : 1),
+    background: e.background || o.background || null,
+  }));
+  raid = {
+    kind: "ordeal", ordeal: o, boss: o, enemies, index: 0, maxHp: 0, hp: 0,
+    time: (o.time || 60) + dB("boss_time"), result: null, drops: [], coins: 0, restartIn: null, sealed: null,
+  };
+  if ((o.rules || []).includes("violet")) {
+    const pool = (C.skills || []).filter((s) => skillUnlocked(s) && s.effect !== "money");
+    if (pool.length) raid.sealed = pool[Math.floor(Math.random() * pool.length)].id;
+  }
+  inRaid = true;
+  setRaidEnemy();
+  if (o.say) angelaSay(o.say.start);
+  render();
+}
+
+function finishOrdeal() {
+  const o = raid.ordeal;
+  const last = C.stage.max_stage || Infinity;
+  S.ordeals[o.id] = true;
+  S.cleared = Math.max(S.cleared, o.stage);
+  S.maxStage = Math.max(S.maxStage, Math.min(o.stage + 1, last));
+  if (S.stage === o.stage && o.stage < last) {
+    S.stage = o.stage + 1;
+    spawn();
+  }
+  raid.drops = rollDrops(o);
+  save(false);
+  if (o.say) angelaSay(o.say.win);
+  if (o.stage === last) $("msg").textContent = "Você concluiu todas as " + last + " fases!";
+}
+
 function renderRaid() {
   setRaidBackground(raid ? raid.enemies[raid.index].background : null);
   $("raid-select").hidden = !!raid;
   $("raid-fight").hidden = !raid;
   if (!raid) { renderRaidShop(); return; }
+
+  const ordeal = raid.kind === "ordeal";
   const e = raid.enemies[raid.index];
   $("raid-name").textContent = e.name;
-  $("raid-risk").textContent = e.risk + (e.isBoss ? " (Boss Raid)" : "");
+  $("raid-risk").textContent = e.risk + (e.isBoss ? (ordeal ? " (Ordeal)" : " (Boss Raid)") : "");
   $("raid-monster").classList.toggle("boss", e.isBoss);
-  $("raid-progress").textContent = raid.enemies.length > 1
-    ? "· Inimigo " + (raid.index + 1) + " de " + raid.enemies.length
-    : "";
+  $("raid-monster").style.borderColor = ordeal ? (raid.ordeal.hex || "") : "";
+  $("raid-progress").textContent =
+    (raid.enemies.length > 1 ? "· Inimigo " + (raid.index + 1) + " de " + raid.enemies.length : "") +
+    (ordeal ? " · " + raid.ordeal.name : "");
   $("raid-time").textContent = Math.ceil(raid.time);
   $("raid-hp-fill").style.width = Math.max(0, (raid.hp / raid.maxHp) * 100) + "%";
   $("raid-hp-text").textContent = fmt(Math.max(0, raid.hp)) + " / " + fmt(raid.maxHp) + " HP";
+
   const res = $("raid-result");
   const dropText = raid.drops.length
     ? " Drop: " + raid.drops.map((d) => d.name).join(", ") + "!"
-    : " Nenhum drop desta vez.";
-    res.textContent = raid.result === "win"
-    ? "Chefe derrotado! +" + fmtCoin(raid.coins) + " Caixas de Enkephalin Raid. " + dropText
-    : raid.result === "lose" ? "O tempo acabou. O chefe escapou." : "";
+    : (ordeal ? "" : " Nenhum drop desta vez.");
+  if (raid.result === "win") {
+    res.textContent = ordeal
+      ? "Ordeal concluído! +" + (raid.ordeal.points || 0) + " pontos de departamento." + dropText
+      : "Chefe derrotado! +" + fmtCoin(raid.coins) + " Caixas de Enkephalin Raid." + dropText;
+  } else if (raid.result === "lose") {
+    res.textContent = ordeal ? "O Ordeal prevaleceu. Tente de novo." : "O tempo acabou. O chefe escapou.";
+  } else {
+    res.textContent = ordeal ? ordealRules(raid) : "";
+  }
   res.className = "raid-result" + (raid.result ? " " + raid.result : "");
   $("raid-retry").hidden = !raid.result;
+  $("raid-back").textContent = ordeal ? "Voltar ao jogo" : "Escolher outro chefe";
   $("raid-monster").disabled = !!raid.result;
-  renderRaidLog();
+  $("raid-auto").parentElement.style.display = ordeal ? "none" : "";
+  document.querySelector(".raid-log").style.display = ordeal ? "none" : "";
+  if (!ordeal) renderRaidLog();
 }
 
 function goToStage(n) {
@@ -699,8 +805,11 @@ function renderSkills() {
     wrap.classList.toggle("locked", !unlocked);
     wrap.classList.toggle("active", active);
     wrap.classList.toggle("cooling", cooling);
-    timer.hidden = unlocked && !cooling;
+    const sealed = !!(raid && raid.sealed === s.id);
+    wrap.classList.toggle("sealed", sealed);
+    timer.hidden = unlocked && !cooling && !sealed;
     if (!unlocked) timer.textContent = "Fase " + s.unlock_stage;
+    else if (sealed) timer.textContent = "Selada";
     else if (cooling) timer.textContent = clock(Math.ceil(((active ? st.until : st.readyAt) - t) / 1000));
 
     autoBtn.classList.toggle("on", on);
@@ -718,8 +827,202 @@ function renderSkills() {
   });
 }
 
+const dB = (effect) => deptB[effect] || 0;
+const deptLvl = (n) => S.dept[n.id] || 0;
+const nodeCost = (n) => (n.cost || 1) + (n.cost_step || 0) * deptLvl(n);
+const deptUnlocked = (d) => S.cleared >= (d.unlock_stage || 0);
+
+function nodeOpen(d, i) {
+  if (i === 0) return true;
+  const prev = d.nodes[i - 1];
+  return deptLvl(prev) >= Math.min(d.chain_level || 3, prev.max_level);
+}
+
+function deptPointsEarned() {
+  const p = C.department_points || { per_stage: 1, per_boss_stage: 2 };
+  const ordeal = (C.ordeals || []).reduce((s, o) => s + (S.ordeals[o.id] ? (o.points || 0) : 0), 0);
+  return S.cleared * (p.per_stage || 0) + Math.floor(S.cleared / C.stage.boss_every) * (p.per_boss_stage || 0) + ordeal;
+}
+
+function deptPointsSpent() {
+  let sum = 0;
+  (C.departments || []).forEach((d) => d.nodes.forEach((n) => {
+    for (let k = 0; k < deptLvl(n); k++) sum += (n.cost || 1) + (n.cost_step || 0) * k;
+  }));
+  return sum;
+}
+
+const deptPoints = () => deptPointsEarned() - deptPointsSpent();
+
+function recalcDept() {
+  deptB = {};
+  (C.departments || []).forEach((d) => d.nodes.forEach((n) => {
+    deptB[n.effect] = (deptB[n.effect] || 0) + deptLvl(n) * n.bonus;
+  }));
+}
+
+function effText(n, b) {
+  switch (n.effect) {
+    case "money": return "+" + pctText(b) + " de enkephalin ganho";
+    case "damage": return "+" + pctText(b) + " de dano total";
+    case "agent_cost": return "-" + pctText(b) + " no custo dos agentes";
+    case "boss_time": return "+" + +b.toFixed(1) + " s de tempo em chefes e raids";
+    case "cooldown": return "-" + pctText(b) + " na recarga das habilidades";
+    case "drop_chance": return "+" + pctText(b) + " de chance de drop";
+    case "offline": return "+" + pctText(b) + " de ganho offline";
+    default: return n.effect + " " + b;
+  }
+}
+
+function buildDept() {
+  const list = $("dept-list");
+  list.innerHTML = "";
+  deptCards = [];
+  (C.departments || []).forEach((d) => {
+    const card = document.createElement("div");
+    card.className = "dept-card";
+    if (d.color) card.style.setProperty("--dept", d.color);
+    card.innerHTML =
+      '<div class="dept-head"><img class="dept-icon" alt="" draggable="false" hidden><div><div class="dept-name"></div><small></small></div></div>' +
+      '<p class="dept-desc"></p><div class="dept-nodes"></div><p class="dept-lock" hidden></p>';
+    card.querySelector(".dept-name").textContent = d.name;
+    card.querySelector("small").textContent = d.sephirah || "";
+    card.querySelector(".dept-desc").textContent = d.description || "";
+    const icon = card.querySelector(".dept-icon");
+    if (d.image) {
+      icon.src = "/static/img/" + d.image;
+      icon.hidden = false;
+    }
+    icon.addEventListener("error", () => { icon.hidden = true; });
+
+    const nodesBox = card.querySelector(".dept-nodes");
+    const rows = d.nodes.map((n, i) => {
+      const el = document.createElement("button");
+      el.type = "button";
+      el.className = "buy";
+      el.innerHTML = '<span><span class="t"></span><small></small></span><span class="cost"></span>';
+      el.addEventListener("click", () => buyNode(d, i));
+      nodesBox.appendChild(el);
+      return { n, el };
+    });
+    list.appendChild(card);
+    deptCards.push({ d, card, rows, lockEl: card.querySelector(".dept-lock") });
+  });
+}
+
+function renderDept() {
+  const points = deptPoints();
+  $("dept-points").textContent = fmtCoin(points);
+  $("dept-earned").textContent = "(" + fmtCoin(deptPointsEarned()) + " ganhos no total)";
+  deptCards.forEach(({ d, card, rows, lockEl }) => {
+    const open = deptUnlocked(d);
+    card.classList.toggle("locked", !open);
+    lockEl.hidden = open;
+    lockEl.textContent = "Libera ao completar a fase " + d.unlock_stage + ".";
+    rows.forEach(({ n, el }, i) => {
+      const lvl = deptLvl(n);
+      const maxed = lvl >= n.max_level;
+      const reached = open && nodeOpen(d, i);
+      const cost = nodeCost(n);
+      el.querySelector(".t").textContent = n.name + " · " + lvl + "/" + n.max_level;
+      if (!reached) {
+        const prev = d.nodes[i - 1];
+        el.querySelector("small").textContent = prev
+          ? "Requer " + prev.name + " no nível " + Math.min(d.chain_level || 3, prev.max_level)
+          : "Departamento bloqueado";
+      } else {
+        el.querySelector("small").textContent =
+          effText(n, n.bonus) + " por nível" + (lvl > 0 ? " · total: " + effText(n, lvl * n.bonus) : "");
+      }
+      el.querySelector(".cost").textContent = maxed ? "MAX" : !reached ? "Bloqueado" : cost + " pts";
+      el.disabled = maxed || !reached || points < cost;
+    });
+  });
+}
+
+function buyNode(d, i) {
+  const n = d.nodes[i];
+  if (!deptUnlocked(d) || !nodeOpen(d, i) || deptLvl(n) >= n.max_level) return;
+  if (deptPoints() < nodeCost(n)) return;
+  S.dept[n.id] = deptLvl(n) + 1;
+  recalcDept();
+  renderDept();
+}
+
+function openDept() {
+  inDept = true;
+  $("dept").hidden = false;
+  S.deptOpened = true;
+  renderDept();
+  checkAngela();
+}
+function closeDept() { inDept = false; $("dept").hidden = true; render(); }
+
+function angelaCond(l) {
+  switch (l.when) {
+    case "start": return true;
+    case "clear": return S.cleared >= (l.stage || 0);
+    case "raid_win": return (S.raidWins || 0) >= (l.count || 1);
+    case "drop": return Object.values(S.equip).some(Boolean);
+    case "dept": return !!S.deptOpened;
+    default: return false;
+  }
+}
+
+function checkAngela() {
+  const A = C.angela;
+  if (!A || !inGame) return;
+  (A.lines || []).forEach((l) => {
+    if (S.seen[l.id] || !angelaCond(l)) return;
+    S.seen[l.id] = true;
+    (Array.isArray(l.text) ? l.text : [l.text]).forEach((t) =>
+      angelaQueue.push(t.replace(/\{jogador\}/g, () => player))
+    );
+  });
+  if (!angelaShowing && angelaQueue.length) showNextAngela();
+}
+
+function setAngelaText(shown, full) {
+  $("angela-typed").textContent = full.slice(0, shown);
+  $("angela-rest").textContent = full.slice(shown);
+}
+
+function showNextAngela() {
+  clearInterval(angelaType);
+  clearTimeout(angelaTimer);
+  const text = angelaQueue.shift();
+  if (text === undefined) {
+    angelaShowing = false;
+    $("angela").hidden = true;
+    return;
+  }
+  angelaShowing = true;
+  const box = $("angela");
+  box.hidden = false;
+  box.dataset.full = text;
+  let i = 0;
+  setAngelaText(0, text);
+  angelaType = setInterval(() => {
+    i++;
+    setAngelaText(i, text);
+    if (i >= text.length) clearInterval(angelaType);
+  }, 25);
+  angelaTimer = setTimeout(showNextAngela, 3500 + text.length * 60);
+}
+
+function angelaClick() {
+  const full = $("angela").dataset.full || "";
+  if ($("angela-typed").textContent.length < full.length) {
+    clearInterval(angelaType);
+    setAngelaText(full.length, full);
+  } else {
+    showNextAngela();
+  }
+}
+
 function render() {
-  const m = monsterFor(S.stage);
+  const og = pendingOrdeal();
+  const m = og ? { name: og.name, risk: "Ordeal · " + og.color, image: og.image } : monsterFor(S.stage);
   const img = $("sprite");
   if (m.image !== shownImage) {
     shownImage = m.image;
@@ -733,12 +1036,16 @@ function render() {
   renderNav();
   renderEquip();
   renderSkills();
-  $("stage").textContent = S.stage + (isBoss(S.stage) ? " · " + Math.ceil(bossTimer) + "s restantes" : "");
+  const dp = deptPoints();
+  $("dept-open").textContent = "Departamentos" + (dp > 0 ? " (" + fmtCoin(dp) + ")" : "");
+  $("stage").textContent = S.stage + (og ? " · Ordeal" : isBoss(S.stage) ? " · " + Math.ceil(bossTimer) + "s restantes" : "");
   $("name").textContent = m.name;
-  $("risk").textContent = m.risk + (isBoss(S.stage) ? " (chefe)" : "");
-  $("monster").classList.toggle("boss", isBoss(S.stage));
-  $("hp-fill").style.width = Math.max(0, (S.hp / S.maxHp) * 100) + "%";
-  $("hp-text").textContent = fmt(Math.max(0, S.hp)) + " / " + fmt(S.maxHp) + " HP";
+  $("risk").textContent = og ? m.risk : m.risk + (isBoss(S.stage) ? " (chefe)" : "");
+  $("monster").classList.toggle("boss", isBoss(S.stage) && !og);
+  $("monster").style.borderColor = og ? (og.hex || "") : "";
+  $("hp-fill").style.width = og ? "100%" : Math.max(0, (S.hp / S.maxHp) * 100) + "%";
+  $("hp-text").textContent = og ? "Clique para enfrentar o Ordeal" : fmt(Math.max(0, S.hp)) + " / " + fmt(S.maxHp) + " HP";
+  $("hint").textContent = og ? "O Ordeal bloqueia o caminho. Derrote-o para avançar." : "Clique na Abnormalidade para suprimi-la.";
 
   setRow(
     "click",
@@ -790,12 +1097,20 @@ async function init() {
   S = Object.assign(newState(), res.state || {});
   S.maxStage = Math.max(S.maxStage || 1, S.stage);
   S.cleared = Math.max(S.cleared || 0, (S.maxStage || 1) - 1);
+  recalcDept();
+  if (res.state && !res.state.ordeals) {
+    (C.ordeals || []).forEach((o) => { if (o.stage <= S.cleared) S.ordeals[o.id] = true; });
+  }
+  if (res.state && !res.state.seen) {
+    // jogador antigo: não despeja todas as falas de uma vez
+    ((C.angela && C.angela.lines) || []).forEach((l) => { if (angelaCond(l)) S.seen[l.id] = true; });
+  }
   if (!res.state || !S.maxHp) spawn();
-      bossTimer = isBoss(S.stage) ? C.stage.boss_time : 0;
+      bossTimer = isBoss(S.stage) ? C.stage.boss_time + dB("boss_time") : 0;
 
   const rate = dps();
   if (res.state && rate > 0 && res.offline_seconds > 60) {
-    const gain = rate * res.offline_seconds * C.stage.reward_ratio * OFFLINE_EFFICIENCY;
+    const gain = rate * res.offline_seconds * C.stage.reward_ratio * Math.min(1, OFFLINE_EFFICIENCY + dB("offline"));
     S.enk += gain;
     $("msg").textContent = "Enquanto você esteve fora, seus agentes coletaram " + fmt(gain) + " caixas de enkephalin.";
   }
@@ -810,7 +1125,36 @@ async function init() {
   });
   buildEquip();
   buildSkills();
+  buildDept();
+  $("dept-open").addEventListener("click", openDept);
+  $("dept-close").addEventListener("click", closeDept);
+  $("dept-respec").addEventListener("click", () => { S.dept = {}; recalcDept(); renderDept(); });
+  const A = C.angela || {};
+  $("angela").addEventListener("click", angelaClick);
+  $("angela-name").textContent = A.name || "Angela";
+  const aImg = $("angela-img");
+  if (A.image) {
+    aImg.src = "/static/img/" + A.image;
+    aImg.hidden = false;
+  }
+  aImg.addEventListener("error", () => { aImg.hidden = true; });
+  $("cheat-angela").addEventListener("click", () => {
+    S.seen = {};
+    angelaQueue = [];
+    $("cheats-dialog").close();
+    checkAngela();
+  });
+  $("cheat-ordeals").addEventListener("click", () => {
+    S.ordeals = {};
+    S.dept = {};
+    recalcDept();
+    Object.keys(S.seen).filter((k) => k.startsWith("warn-")).forEach((k) => delete S.seen[k]);
+    $("cheats-dialog").close();
+    render();
+  });
   $("monster").addEventListener("click", () => {
+    const og = pendingOrdeal();
+    if (og) { startOrdeal(og); return; }
     const d = clickDamage();
     record("click", d);
     damage(d);
@@ -830,6 +1174,7 @@ async function init() {
   $("reset-confirm").addEventListener("click", async () => {
     $("reset-dialog").close();
     S = newState();
+    recalcDept();
     spawn();
     $("auto").checked = S.auto;
     await save(false);
@@ -851,8 +1196,14 @@ async function init() {
   buildRaidShop();
   $("raid-open").addEventListener("click", openRaid);
   $("raid-close").addEventListener("click", closeRaid);
-  $("raid-back").addEventListener("click", () => { raid = null; render(); });
-  $("raid-retry").addEventListener("click", () => startRaid(raid.boss, true));
+  $("raid-retry").addEventListener("click", () => {
+    if (raid.kind === "ordeal") startOrdeal(raid.ordeal);
+    else startRaid(raid.boss, true);
+  });
+  $("raid-back").addEventListener("click", () => {
+    if (raid && raid.kind === "ordeal") closeRaid();
+    else { raid = null; render(); }
+  });
   $("raid-auto").addEventListener("change", (e) => { raidAuto = e.target.checked; });
   $("raid-monster").addEventListener("click", () => { raidDamage(clickDamage()); render(); });
   $("raid-sprite").addEventListener("error", () => { $("raid-sprite").hidden = true; });
@@ -902,17 +1253,24 @@ async function init() {
   }
 
   setInterval(() => {
-    if (!inGame) return;
-    autoSkills();
+    if (!inGame || inDept) return;
+    checkAngela();
+    const gate = inRaid ? null : pendingOrdeal();
+    if (gate && !S.seen["warn-" + gate.id]) {
+      S.seen["warn-" + gate.id] = true;
+      if (gate.say) angelaSay(gate.say.warn);
+    }
+    if (!gate) autoSkills();
     if (inRaid) {
       tickRaid(TICK_MS / 1000);
-    } else {
+    } else if (!gate) {
       decayRecent(TICK_MS / 1000);
       agentTick(TICK_MS / 1000);
       tickBoss(TICK_MS / 1000);
     }
     render();
   }, TICK_MS);
+  
   setInterval(() => save(false), AUTOSAVE_MS);
   window.addEventListener("beforeunload", () => save(true));
     $("cheats-open").addEventListener("click", () => {
