@@ -90,9 +90,9 @@
   ],
 
     "skills": [
-    { "id": "skill-dps-1", "name": "E.G.O Equipment", "image": "butterfly-armor.webp", "effect": "damage", "mult": 3, "duration": 15, "cooldown": 30, "description": "Aumenta seu DPS em 3x durante 10s.", "unlock_stage": 10 },
+    { "id": "skill-dps-1", "name": "E.G.O Equipment", "image": "butterfly-armor.webp", "effect": "damage", "mult": 2, "duration": 15, "cooldown": 30, "description": "Aumenta seu DPS em 2x durante 15s.", "unlock_stage": 10 },
     { "id": "skill-money", "name": "Greed", "image": "greed-skill.webp", "effect": "money", "mult": 3, "duration": 30, "cooldown": 120, "description": "Aumenta seu ganho de Enkephalin em 3x durante 30s.", "unlock_stage": 35 },
-    { "id": "skill-dps-2", "name": "Rabbit Team", "image": "rabbit-skill.webp", "effect": "damage", "mult": 5, "duration": 15, "cooldown": 60, "cost_pct": 5, "description": "Chame o Rabbit Team e aumente seu DPS em 5x durante 15s, mas eles não trabalham de graça. (5% de seu Enkephalin Atual).", "unlock_stage": 50, "ally_image": "rabbit-team.webp" }
+    { "id": "skill-dps-2", "name": "Rabbit Team", "image": "rabbit-skill.webp", "effect": "damage", "mult": 3, "duration": 15, "cooldown": 60, "cost_pct": 5, "description": "Chame o Rabbit Team e aumente seu DPS em 3x durante 15s, mas eles não trabalham de graça. (5% de seu Enkephalin Atual).", "unlock_stage": 50, "ally_image": "rabbit-team.webp" }
   ],
 
   "raid_upgrades": [
@@ -114,10 +114,10 @@
         { "name": "Fruit of Understanding", "risk": "Dawn", "hp_mult": 4.8, "image": "dawn-enemy4.webp" }
       ],
       "say": {
-        "warn": "{jogador}, detectei um Ordeal se aproximando: a Madrugada. Não será possível avançar até que ele seja superado.",
-        "start": "O Ordeal da Madrugada começou. Eles são numerosos, mas frágeis. Mantenha o ritmo.",
-        "win": "A Madrugada foi superada. O caminho está livre, {jogador}.",
-        "lose": ["A Madrugada prevaleceu desta vez. Reorganize-se.", "Isso foi apenas o começo, {jogador}. Tente de novo."]
+        "warn": "{jogador}, detectei um Ordeal se aproximando: o Amanhecer. Não será possível avançar até que ele seja superado.",
+        "start": "O Ordeal do Amanhecer começou. Eles são numerosos, mas frágeis. Mantenha o ritmo.",
+        "win": "A Amanhecer foi superada. O caminho está livre, {jogador}.",
+        "lose": ["O Amanhecer prevaleceu desta vez. Reorganize-se.", "Isso foi apenas o começo, {jogador}. Tente de novo."]
       },
       "drops": [ { "id": "ordeal-dawn-gift", "type": "gift", "name": "Ordeal of Dawn Derrotada", "image": "ordeal-gift.png", "chance": 1, "bonus": 0.50 } ] },
 
