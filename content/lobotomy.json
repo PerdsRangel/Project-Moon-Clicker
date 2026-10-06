@@ -332,10 +332,10 @@
     { "name": "White Night", "risk": "ALEPH", "image": "white-night.webp", "raid_hp": 1}
   ],
   "agents": [
-    { "id": "recruta", "name": "Funcionários de Rank I", "base_cost": 10, "base_dps": 2 },
-    { "id": "treinado", "name": "Funcionários de Rank II", "base_cost": 100, "base_dps": 20 },
-    { "id": "veterano", "name": "Funcionários de Rank III", "base_cost": 1000, "base_dps": 200 },
-    { "id": "elite", "name": "Funcionários de Rank IV", "base_cost": 10000, "base_dps": 2000 },
-    { "id": "elite", "name": "Funcionários de Rank V", "base_cost": 100000, "base_dps": 20000 }
+    { "id": "rank1", "name": "Funcionários de Rank I", "base_cost": 10, "base_dps": 2 },
+    { "id": "rank2", "name": "Funcionários de Rank II", "base_cost": 100, "base_dps": 20 },
+    { "id": "rank3", "name": "Funcionários de Rank III", "base_cost": 1000, "base_dps": 200 },
+    { "id": "rank4", "name": "Funcionários de Rank IV", "base_cost": 10000, "base_dps": 2000 },
+    { "id": "rank5", "name": "Funcionários de Rank V", "base_cost": 100000, "base_dps": 20000 }
   ]
 }
