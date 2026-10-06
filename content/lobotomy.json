@@ -7,7 +7,7 @@
   "cost_growth": 1.08,
   "milestone_every": 25,
   "milestone_mult": 3,
-  "dps_share": 0.05
+  "dps_share": 0.04
   },
   "milestone": { "every": 25, "mult": 3 },
 
@@ -90,7 +90,7 @@
   ],
 
     "skills": [
-    { "id": "skill-dps-1", "name": "E.G.O Equipment", "image": "butterfly-armor.webp", "effect": "damage", "mult": 2, "duration": 15, "cooldown": 30, "description": "Aumenta seu DPS em 2x durante 15s.", "unlock_stage": 10 },
+    { "id": "skill-dps-1", "name": "E.G.O Equipment", "image": "butterfly-armor.webp", "effect": "damage", "mult": 1.5, "duration": 15, "cooldown": 45, "description": "Aumenta seu DPS em 1.5x durante 15s.", "unlock_stage": 10 },
     { "id": "skill-money", "name": "Greed", "image": "greed-skill.webp", "effect": "money", "mult": 3, "duration": 30, "cooldown": 120, "description": "Aumenta seu ganho de Enkephalin em 3x durante 30s.", "unlock_stage": 35 },
     { "id": "skill-dps-2", "name": "Rabbit Team", "image": "rabbit-skill.webp", "effect": "damage", "mult": 3, "duration": 15, "cooldown": 60, "cost_pct": 5, "description": "Chame o Rabbit Team e aumente seu DPS em 3x durante 15s, mas eles não trabalham de graça. (5% de seu Enkephalin Atual).", "unlock_stage": 50, "ally_image": "rabbit-team.webp" }
   ],
@@ -182,15 +182,15 @@
   "raidbosses": [
         { "name": "The Funeral of the Dead Butterflies (Enraged)", "risk": "HE", "image": "butterfly-raid.webp", "raid_hp": 20000, "raid_coins": 1,
       "drops": [
-        { "id": "r1-arma", "type": "weapon", "name": "Solemn Lament Pistols", "image": "butterfly-weapon.webp", "chance": 0.05, "bonus": 0.20 },
-        { "id": "r1-armadura", "type": "armor", "name": "Solemn Lament Suit", "image": "butterfly-armor.webp", "chance": 0.10, "bonus": 0.10 },
-        { "id": "r1-gift", "type": "gift", "name": "Solemn Lament", "image": "butterfly-gift.webp", "chance": 0.01, "bonus": 0.50 }
+        { "id": "r1-arma", "type": "weapon", "name": "Solemn Lament Pistols", "image": "butterfly-weapon.webp", "chance": 0.02, "bonus": 0.20 },
+        { "id": "r1-armadura", "type": "armor", "name": "Solemn Lament Suit", "image": "butterfly-armor.webp", "chance": 0.05, "bonus": 0.10 },
+        { "id": "r1-gift", "type": "gift", "name": "Solemn Lament", "image": "butterfly-gift.webp", "chance": 0.005, "bonus": 0.50 }
       ] },
         { "name": "Der Freischütz (7° Bullet)", "risk": "HE", "image": "magicbullet-raid.webp", "raid_hp": 1500000, "raid_coins": 5,
       "drops": [
-        { "id": "r2-arma", "type": "weapon", "name": "Magic Bullet Rifle", "image": "magicbullet-weapon.webp", "chance": 0.05, "bonus": 0.30 },
-        { "id": "r2-armadura", "type": "armor", "name": "Magic Bullet Suit", "image": "magicbullet-armor.webp", "chance": 0.10, "bonus": 0.15 },
-        { "id": "r2-gift", "type": "gift", "name": "Magic Bullet", "image": "magicbullet-gift.webp", "chance": 0.01, "bonus": 0.75 }
+        { "id": "r2-arma", "type": "weapon", "name": "Magic Bullet Rifle", "image": "magicbullet-weapon.webp", "chance": 0.02, "bonus": 0.30 },
+        { "id": "r2-armadura", "type": "armor", "name": "Magic Bullet Suit", "image": "magicbullet-armor.webp", "chance": 0.05, "bonus": 0.15 },
+        { "id": "r2-gift", "type": "gift", "name": "Magic Bullet", "image": "magicbullet-gift.webp", "chance": 0.005, "bonus": 0.75 }
       ] },
         { "name": "Queen Bee (Enraged)", "risk": "WAW", "image": "queen-bee-raid.webp", "raid_hp": 50000000, "time": 120, "raid_coins": 20,
       "waves": [
@@ -199,27 +199,27 @@
         { "name": "Worker Bee 3", "risk": "Summon", "image": "worker-bee.webp", "hp": 30000000 }
       ],
       "drops": [
-        { "id": "r3-arma", "type": "weapon", "name": "Hornet Rifle", "image": "bee-weapon.webp", "chance": 0.05, "bonus": 0.40 },
-        { "id": "r3-armadura", "type": "armor", "name": "Hornet Suit", "image": "bee-armor.webp", "chance": 0.10, "bonus": 0.20 },
-        { "id": "r3-gift", "type": "gift", "name": "Hornet", "image": "bee-gift.webp", "chance": 0.01, "bonus": 1.0 }
+        { "id": "r3-arma", "type": "weapon", "name": "Hornet Rifle", "image": "bee-weapon.webp", "chance": 0.02, "bonus": 0.40 },
+        { "id": "r3-armadura", "type": "armor", "name": "Hornet Suit", "image": "bee-armor.webp", "chance": 0.05, "bonus": 0.20 },
+        { "id": "r3-gift", "type": "gift", "name": "Hornet", "image": "bee-gift.webp", "chance": 0.005, "bonus": 1.0 }
       ] },
         { "name": "The Queen of Hatred (Serpent)", "risk": "WAW", "image": "queen-hatred-raid.webp", "raid_hp": 7500000000, "time": 120, "raid_coins": 100,
       "waves": [
         { "name": "The Queen of Hatred", "risk": "WAW", "image": "queen-of-hatred.webp", "hp": 5000000000 }
       ],
       "drops": [
-        { "id": "r4-arma", "type": "weapon", "name": "Love and Hate Staff", "image": "hatred-weapon.webp", "chance": 0.05, "bonus": 0.50 },
-        { "id": "r4-armadura", "type": "armor", "name": "Love and Hate Suit", "image": "hatred-armor.webp", "chance": 0.10, "bonus": 0.25 },
-        { "id": "r4-gift", "type": "gift", "name": "In the Name of Love and Hate", "image": "hatred-gift.webp", "chance": 0.01, "bonus": 1.25 }
+        { "id": "r4-arma", "type": "weapon", "name": "Love and Hate Staff", "image": "hatred-weapon.webp", "chance": 0.02, "bonus": 0.50 },
+        { "id": "r4-armadura", "type": "armor", "name": "Love and Hate Suit", "image": "hatred-armor.webp", "chance": 0.05, "bonus": 0.25 },
+        { "id": "r4-gift", "type": "gift", "name": "In the Name of Love and Hate", "image": "hatred-gift.webp", "chance": 0.005, "bonus": 1.25 }
       ] },
         { "name": "Judgement Bird", "risk": "WAW", "image": "judgement-raid.webp", "raid_hp": 500000000000, "time": 120, "raid_coins": 300,
       "waves": [
         { "name": "Liberte o funcionário pego!", "risk": "HELP", "image": "dead-agent.webp", "hp": 300000000000 }
       ],
       "drops": [
-        { "id": "r5-arma", "type": "weapon", "name": "Justitia Blade", "image": "judgement-weapon.webp", "chance": 0.05, "bonus": 0.60 },
-        { "id": "r5-armadura", "type": "armor", "name": "Justitia Suit", "image": "judgement-armor.webp", "chance": 0.10, "bonus": 0.30 },
-        { "id": "r5-gift", "type": "gift", "name": "Justitia", "image": "judgement-gift.webp", "chance": 0.01, "bonus": 1.50 }
+        { "id": "r5-arma", "type": "weapon", "name": "Justitia Blade", "image": "judgement-weapon.webp", "chance": 0.02, "bonus": 0.60 },
+        { "id": "r5-armadura", "type": "armor", "name": "Justitia Suit", "image": "judgement-armor.webp", "chance": 0.05, "bonus": 0.30 },
+        { "id": "r5-gift", "type": "gift", "name": "Justitia", "image": "judgement-gift.webp", "chance": 0.005, "bonus": 1.50 }
       ] },
         { "name": "The Knight of Despair", "risk": "WAW", "image": "despair-raid.webp", "raid_hp": 35000000000000, "time": 120, "raid_coins": 1000,
       "waves": [
@@ -229,9 +229,9 @@
         { "name": "Tear Sword 4/4", "risk": "Summon", "image": "despair-sword.webp", "hp": 25000000000000 }
       ],
       "drops": [
-        { "id": "r6-arma", "type": "weapon", "name": "The Sword Sharpened with Tears Rapier", "image": "despair-weapon.webp", "chance": 0.05, "bonus": 0.70 },
-        { "id": "r6-armadura", "type": "armor", "name": "The Sword Sharpened with Tears Suit", "image": "despair-armor.webp", "chance": 0.10, "bonus": 0.35 },
-        { "id": "r6-gift", "type": "gift", "name": "The Sword Sharpened with Tears", "image": "despair-gift.webp", "chance": 0.01, "bonus": 1.75 }
+        { "id": "r6-arma", "type": "weapon", "name": "The Sword Sharpened with Tears Rapier", "image": "despair-weapon.webp", "chance": 0.02, "bonus": 0.70 },
+        { "id": "r6-armadura", "type": "armor", "name": "The Sword Sharpened with Tears Suit", "image": "despair-armor.webp", "chance": 0.05, "bonus": 0.35 },
+        { "id": "r6-gift", "type": "gift", "name": "The Sword Sharpened with Tears", "image": "despair-gift.webp", "chance": 0.005, "bonus": 1.75 }
       ] },
         { "name": "The Mountain of Smiling Bodies (Final)", "risk": "ALEPH", "image": "smilingb-raid3.webp", "raid_hp": 10000000000000000, "time": 120, "raid_coins": 5000,
       "waves": [
@@ -239,18 +239,18 @@
         { "name": "Mountain of Smiling Bodies (Fase 2)", "risk": "ALEPH", "image": "smilingb-raid2.webp", "hp": 5000000000000000 }
       ],
       "drops": [
-        { "id": "r7-arma", "type": "weapon", "name": "Smiling Bodies Weapon", "image": "smile-weapon.webp", "chance": 0.05, "bonus": 0.80 },
-        { "id": "r7-armadura", "type": "armor", "name": "Smiling Bodies Suit", "image": "smile-armor.webp", "chance": 0.10, "bonus": 0.40 },
-        { "id": "r7-gift", "type": "gift", "name": "Smile", "image": "smile-gift.webp", "chance": 0.01, "bonus": 2.0 }
+        { "id": "r7-arma", "type": "weapon", "name": "Smiling Bodies Weapon", "image": "smile-weapon.webp", "chance": 0.02, "bonus": 0.80 },
+        { "id": "r7-armadura", "type": "armor", "name": "Smiling Bodies Suit", "image": "smile-armor.webp", "chance": 0.05, "bonus": 0.40 },
+        { "id": "r7-gift", "type": "gift", "name": "Smile", "image": "smile-gift.webp", "chance": 0.005, "bonus": 2.0 }
       ] },
         { "name": "Nothing There", "risk": "ALEPH", "image": "nothing-raid2.webp", "raid_hp": 30000000000000000000, "time": 120, "raid_coins": 100000,
       "waves": [
         { "name": "Strange Egg", "risk": "ALEPH", "image": "nothing-raid1.webp", "hp": 10000000000000000000 }
       ],
       "drops": [
-        { "id": "r8-arma", "type": "weapon", "name": "Mimicry Blade", "image": "nothing-weapon.webp", "chance": 0.05, "bonus": 2.0 },
-        { "id": "r8-armadura", "type": "armor", "name": "Mimicry Suit", "image": "nothing-armor.webp", "chance": 0.10, "bonus": 1.0 },
-        { "id": "r8-gift", "type": "gift", "name": "Mimicry", "image": "nothing-gift.webp", "chance": 0.01, "bonus": 3.5 }
+        { "id": "r8-arma", "type": "weapon", "name": "Mimicry Blade", "image": "nothing-weapon.webp", "chance": 0.02, "bonus": 2.0 },
+        { "id": "r8-armadura", "type": "armor", "name": "Mimicry Suit", "image": "nothing-armor.webp", "chance": 0.05, "bonus": 1.0 },
+        { "id": "r8-gift", "type": "gift", "name": "Mimicry", "image": "nothing-gift.webp", "chance": 0.005, "bonus": 3.5 }
       ] },
       { "name": "Apocalypse Bird", "risk": "ALEPH", "image": "apocalypse-bird.gif", "raid_hp": 1500000000000000000000, "time": 120,  "background": "apocabird-background5.webp", "raid_coins": 1000000,
       "waves": [
@@ -260,9 +260,9 @@
         { "name": "Big Eyes", "risk": "?", "image": "bigbird-egg.webp", "hp": 300000000000000000000, "background": "apocabird-background4.webp" }
       ],
       "drops": [
-        { "id": "r9-arma", "type": "weapon", "name": "Twilight", "image": "apoca-weapon.webp", "chance": 0.05, "bonus": 10.0 },
-        { "id": "r9-armadura", "type": "armor", "name": "Twilight Suit", "image": "apoca-armor.webp", "chance": 0.10, "bonus": 5.0 },
-        { "id": "r9-gift", "type": "gift", "name": "Through the Dark Twilight", "image": "apoca-gift.webp", "chance": 0.01, "bonus": 30.0 }
+        { "id": "r9-arma", "type": "weapon", "name": "Twilight", "image": "apoca-weapon.webp", "chance": 0.02, "bonus": 10.0 },
+        { "id": "r9-armadura", "type": "armor", "name": "Twilight Suit", "image": "apoca-armor.webp", "chance": 0.05, "bonus": 5.0 },
+        { "id": "r9-gift", "type": "gift", "name": "Through the Dark Twilight", "image": "apoca-gift.webp", "chance": 0.005, "bonus": 30.0 }
       ] },
         { "name": "White Night", "risk": "ALEPH", "image": "white-night-raid.webp", "raid_hp": 25000000000000000000000, "time": 120,  "background": "religion-background.png", "raid_coins": 2500000,
       "waves": [
@@ -277,12 +277,12 @@
         { "name": "Spear Apostle", "risk": "???", "image": "apostle2.webp", "hp": 1200000000000000000000, "background": "religion-background.png" },
         { "name": "Scythe Apostle", "risk": "???", "image": "apostle3.webp", "hp": 1300000000000000000000, "background": "religion-background.png" },
         { "name": "Wand Apostle", "risk": "???", "image": "apostle1.webp", "hp": 1500000000000000000000, "background": "religion-background.png" },
-        { "name": "Guardian Apostle", "risk": "???", "image": "apostle2.webp", "hp": 3000000000000000000000, "background": "religion-background.png" }
+        { "name": "Guardian Apostle", "risk": "???", "image": "apostle4.webp", "hp": 3000000000000000000000, "background": "religion-background.png" }
       ],
       "drops": [
-        { "id": "r10-arma", "type": "weapon", "name": "Paradise Weapon", "image": "white-weapon.webp", "chance": 0.05, "bonus": 25.0 },
-        { "id": "r10-armadura", "type": "armor", "name": "Paradise Suit", "image": "white-armor.webp", "chance": 0.10, "bonus": 10.0 },
-        { "id": "r10-gift", "type": "gift", "name": "Paradise Lost", "image": "white-gift.webp", "chance": 0.01, "bonus": 50.0 }
+        { "id": "r10-arma", "type": "weapon", "name": "Paradise Weapon", "image": "white-weapon.webp", "chance": 0.02, "bonus": 25.0 },
+        { "id": "r10-armadura", "type": "armor", "name": "Paradise Suit", "image": "white-armor.webp", "chance": 0.05, "bonus": 10.0 },
+        { "id": "r10-gift", "type": "gift", "name": "Paradise Lost", "image": "white-gift.webp", "chance": 0.005, "bonus": 50.0 }
       ] }
   ],
 
@@ -295,7 +295,7 @@
     "boss_time": 30,
     "max_stage": 100
   },
-  "agent_cost_growth": 1.07,
+  "agent_cost_growth": 1.08,
   "abnormalities": [
     { "name": "Fairy Festival", "risk": "ZAYIN", "image": "fairy-festival.webp"},
     { "name": "Punishing Bird", "risk": "TETH", "image": "punishing-bird.webp"},
@@ -332,9 +332,10 @@
     { "name": "White Night", "risk": "ALEPH", "image": "white-night.webp", "raid_hp": 1}
   ],
   "agents": [
-    { "id": "recruta", "name": "Agente Recruta", "base_cost": 10, "base_dps": 5 },
-    { "id": "treinado", "name": "Agente Treinado", "base_cost": 100, "base_dps": 50 },
-    { "id": "veterano", "name": "Agente Veterano", "base_cost": 1000, "base_dps": 500 },
-    { "id": "elite", "name": "Agente de Elite", "base_cost": 10000, "base_dps": 5000 }
+    { "id": "recruta", "name": "Funcionários de Rank I", "base_cost": 10, "base_dps": 2 },
+    { "id": "treinado", "name": "Funcionários de Rank II", "base_cost": 100, "base_dps": 20 },
+    { "id": "veterano", "name": "Funcionários de Rank III", "base_cost": 1000, "base_dps": 200 },
+    { "id": "elite", "name": "Funcionários de Rank IV", "base_cost": 10000, "base_dps": 2000 },
+    { "id": "elite", "name": "Funcionários de Rank V", "base_cost": 100000, "base_dps": 20000 }
   ]
 }
