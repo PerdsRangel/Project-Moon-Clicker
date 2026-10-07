@@ -338,7 +338,8 @@
     { "id": "rank3", "name": "Employees - Rank III", "base_cost": 1000, "base_dps": 200 },
     { "id": "rank4", "name": "Employees - Rank IV", "base_cost": 10000, "base_dps": 2000 },
     { "id": "rank5", "name": "Employees - Rank V", "base_cost": 100000, "base_dps": 20000 },
-    { "id": "rank6", "name": "Employees - Rank EX", "base_cost": 1000000, "base_dps": 200000 }
+    { "id": "rank6", "name": "Employees - Rank EX", "base_cost": 1000000, "base_dps": 200000 },
+    { "id": "rank7", "name": "High Grade Fixers", "base_cost": 10000000, "base_dps": 2000000 }
   ],
 
   "meltdown_unlock": 50,
