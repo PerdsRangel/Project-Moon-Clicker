@@ -34,6 +34,9 @@ let achRows = [];
 let achKey = null;
 
 const $ = (id) => document.getElementById(id);
+const SLOTS = ["weapon", "armor", "gift"];
+const SLOT_NAMES = { weapon: "Arma", armor: "Armadura", gift: "Ego Gift" };
+const isEq = (d) => S.equipped[d.type] === d.id && !!S.equip[d.id];
 
 const SUFFIXES = ["", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc"];
 
@@ -46,7 +49,10 @@ function fmt(n) {
 }
 
 function newState() {
-    return { version: 1, stage: 1, maxStage: 1, cleared: 0, equip: {}, raidEnk: 0, raidUp: {}, skills: {}, skillAuto: {}, seen: {}, raidWins: 0, deptOpened: false, dept: {}, enk: 0, clickLvl: 0, agents: {}, hp: 0, maxHp: 0, auto: true, ordeals: {}, ach: {}, };
+    return { version: 1, stage: 1, maxStage: 1, cleared: 0, equip: {}, raidEnk: 0, raidUp: {}, skills: {}, skillAuto: {}, seen: {},
+    raidWins: 0, deptOpened: false, dept: {}, enk: 0, clickLvl: 0, agents: {}, hp: 0, maxHp: 0, auto: true, ordeals: {}, ach: {},
+    equipped: { weapon: null, armor: null, gift: null },
+  };
 }
 
 /* ---------- regras ---------- */
@@ -68,18 +74,24 @@ function monsterFor(n) {
   return C.abnormalities[i % C.abnormalities.length];
 }
 
-const clickMult = () => Math.pow(C.click.milestone_mult, Math.floor(S.clickLvl / C.click.milestone_every));
-const clickDamage = () => C.click.base_damage * (1 + S.clickLvl) * clickMult() * dmgMult() + dps() * C.click.dps_share;
+const msGlobal = () => C.milestone.mode === "global";
+const agentMarks = (a) => Math.floor(agentLvl(a) / C.milestone.every);
+const clickMarks = () => Math.floor(S.clickLvl / C.click.milestone_every);
+const totalMarks = () => C.agents.reduce((n, a) => n + agentMarks(a), 0) + clickMarks();
+const globalMult = () => (msGlobal() ? Math.pow(C.milestone.global_mult || 1.1, totalMarks()) : 1);
+const clickShare = () => Math.min(C.click.share_max || Infinity, (C.click.dps_share || 0) + (C.click.share_per_level || 0) * S.clickLvl);
+const clickMult = () => (msGlobal() ? 1 : Math.pow(C.click.milestone_mult, Math.floor(S.clickLvl / C.click.milestone_every)));
+const clickDamage = () => C.click.base_damage * (1 + S.clickLvl) * clickMult() * dmgMult() + dps() * clickShare();
+const agentMult = (a) => (msGlobal() ? 1 : Math.pow(C.milestone.mult, agentMarks(a)));
 const clickCost = () => C.click.base_cost * Math.pow(C.click.cost_growth, S.clickLvl);
 const agentLvl = (a) => S.agents[a.id] || 0;
 const agentCost = (a) => a.base_cost * Math.pow(C.agent_cost_growth, agentLvl(a));
-const agentMult = (a) => Math.pow(C.milestone.mult, Math.floor(agentLvl(a) / C.milestone.every));
 const raidUpBonus = () => (C.raid_upgrades || []).reduce((sum, u) => sum + (S.raidUp[u.id] || 0) * u.bonus, 0);
 const achMult = (effect) => (C.meltdowns || []).reduce((m, x) => {
   const a = x.achievement;
   return a && S.ach[a.id] && a.effect === effect ? m * (1 + a.bonus) : m;
 }, 1);
-const dmgMult = () => (1 + raidUpBonus() + dB("damage") + dropList.reduce((sum, d) => sum + (S.equip[d.id] ? d.bonus : 0), 0)) * skillMult("damage") * achMult("damage");
+const dmgMult = () => (1 + raidUpBonus() + dB("damage") + dropList.reduce((sum, d) => sum + (isEq(d) ? d.bonus : 0), 0)) * skillMult("damage") * achMult("damage") * globalMult();
 const agentDmg = (a) => a.base_dps * agentLvl(a) * agentMult(a) * dmgMult();
 const dps = () => C.agents.reduce((sum, a) => sum + agentDmg(a), 0);
 
@@ -93,7 +105,7 @@ function dropsOf(boss, i) {
   return [
     { id: n + "-arma", type: "weapon", name: "Arma (nome a definir)", image: "", chance: 0.05, bonus: 0.20 },
     { id: n + "-armadura", type: "armor", name: "Armadura (nome a definir)", image: "", chance: 0.10, bonus: 0.10 },
-    { id: n + "-gift", type: "armor", name: "Gift (nome a definir)", image: "", chance: 0.01, bonus: 0.50 },
+    { id: n + "-gift", type: "gift", name: "Gift (nome a definir)", image: "", chance: 0.01, bonus: 0.50 },
   ];
 }
 
@@ -115,6 +127,7 @@ function rollDrops(boss) {
   boss.drops.forEach((d) => {
     if (!S.equip[d.id] && Math.random() < d.chance * (1 + dB("drop_chance"))) {
       S.equip[d.id] = true;
+      if (!S.equipped[d.type]) S.equipped[d.type] = d.id;
       got.push(d);
     }
   });
@@ -285,6 +298,8 @@ function buy(id) {
 
 const fmtMult = (m) => (m < 1000 ? m.toLocaleString("pt-BR") : fmt(m));
 const fmtPct = (p) => (p > 0 && p < 1 ? "<1%" : Math.round(p) + "%");
+const fmtX = (x) => (x < 1000 ? x.toFixed(2).replace(".", ",") : fmt(x));
+const toNext = (lvl, every) => every - (lvl % every);
 
 function setRow(id, title, sub, p, bonus) {
   const b = $("buy-" + id);
@@ -297,7 +312,7 @@ function setRow(id, title, sub, p, bonus) {
 
 function currentTrack() {
   if (!inGame) return "menu";
-  if (raid) return raid.kind === "meltdown" && raid.boss.music ? "melt:" + raid.boss.id : "raid";
+  if (raid) return raid.boss.music ? "melt:" + (raid.boss.id || raid.boss.name) : "raid";
   return isBoss(S.stage) ? "boss" : "normal";
 }
 
@@ -810,6 +825,73 @@ function renderNav() {
 let equipRows = [];
 let equipKey = null;
 
+function toggleEquip(d) {
+  if (!S.equip[d.id] || !SLOTS.includes(d.type)) return;
+  S.equipped[d.type] = S.equipped[d.type] === d.id ? null : d.id;
+  equipKey = null; // força redesenhar a lista
+  render();
+}
+
+// jogador antigo: equipa o melhor item de cada tipo que ele já tem
+function autoEquipBest() {
+  SLOTS.forEach((slot) => {
+    const best = dropList
+      .filter((d) => d.type === slot && S.equip[d.id])
+      .sort((a, b) => b.bonus - a.bonus)[0];
+    S.equipped[slot] = best ? best.id : null;
+  });
+}
+
+function buildSlots() {
+  const box = $("slots");
+  box.innerHTML = "";
+  SLOTS.forEach((slot) => {
+    const el = document.createElement("button");
+    el.type = "button";
+    el.className = "slot empty";
+    el.dataset.slot = slot;
+    el.innerHTML =
+      '<span class="slot-label"></span>' +
+      '<span class="equip-icon"><img alt="" draggable="false" hidden></span>' +
+      '<span class="slot-name"></span><span class="slot-bonus"></span>';
+    el.querySelector(".slot-label").textContent = SLOT_NAMES[slot];
+    el.querySelector("img").addEventListener("error", (e) => { e.target.hidden = true; });
+    el.addEventListener("click", () => {
+      if (!S.equipped[slot]) return;
+      S.equipped[slot] = null;
+      equipKey = null;
+      render();
+    });
+    box.appendChild(el);
+  });
+  const total = document.createElement("p");
+  total.id = "slots-total";
+  total.className = "slots-total";
+  box.appendChild(total);
+}
+
+function renderSlots() {
+  let sum = 0;
+  document.querySelectorAll("#slots .slot").forEach((el) => {
+    const slot = el.dataset.slot;
+    const d = dropList.find((x) => x.id === S.equipped[slot] && S.equip[x.id]);
+    const img = el.querySelector("img");
+    el.classList.toggle("empty", !d);
+    el.title = d ? "Clique para desequipar" : "";
+    el.querySelector(".slot-name").textContent = d ? d.name : "Vazio";
+    el.querySelector(".slot-bonus").textContent = d ? "+" + pctText(d.bonus) : "";
+    if (d && d.image) {
+      const url = "/static/img/" + d.image;
+      if (!img.src.endsWith(url)) img.src = url;
+      img.hidden = false;
+    } else {
+      img.hidden = true;
+    }
+    if (d) sum += d.bonus;
+  });
+  $("slots-total").textContent = "Bônus dos equipados: +" + pctText(sum) + " de dano";
+}
+
 function buildEquip() {
   const box = $("equip");
   box.innerHTML = "";
@@ -825,6 +907,7 @@ function buildEquip() {
     }
     img.addEventListener("error", () => { img.hidden = true; });
     row.querySelector(".equip-name").textContent = d.name;
+    row.addEventListener("click", () => toggleEquip(d));
     box.appendChild(row);
     return { row, d };
   });
@@ -836,9 +919,9 @@ function buildEquip() {
 }
 
 function renderEquip() {
-  // só atualiza quando os itens obtidos ou o progresso mudam
+  // só atualiza quando os itens, o progresso ou os equipados mudam
   const owned = Object.keys(S.equip).filter((k) => S.equip[k]).sort().join(",");
-  const key = owned + "|" + S.cleared;
+  const key = owned + "|" + S.cleared + "|" + SLOTS.map((s) => S.equipped[s] || "-").join(",");
   if (key === equipKey) return;
   equipKey = key;
 
@@ -846,14 +929,19 @@ function renderEquip() {
   equipRows.forEach(({ row, d }) => {
     const has = !!S.equip[d.id];
     const show = has || raidOpen(d.unlock);
+    const worn = isEq(d);
     row.style.display = show ? "" : "none";
     if (show) visible++;
     row.classList.toggle("locked", !has);
+    row.classList.toggle("equipped", worn);
+    row.style.cursor = has ? "pointer" : "";
+    row.title = has ? (worn ? "Clique para desequipar" : "Clique para equipar") : "";
     row.querySelector("small").textContent = has
-      ? typeName(d) + " · +" + pctText(d.bonus) + " de dano"
+      ? typeName(d) + " · +" + pctText(d.bonus) + " de dano" + (worn ? " · Equipado" : "")
       : typeName(d) + " · dropa de " + d.from;
   });
   $("equip-empty").hidden = visible > 0;
+  renderSlots();
 }
 
 let skillEls = [];
@@ -1188,22 +1276,31 @@ function render() {
   $("hp-text").textContent = og ? "Clique para enfrentar o Ordeal" : fmt(Math.max(0, S.hp)) + " / " + fmt(S.maxHp) + " HP";
   $("hint").textContent = og ? "O Ordeal bloqueia o caminho. Derrote-o para avançar." : "Clique na Abnormalidade para suprimi-la.";
 
+  const g = C.milestone.global_mult || 1.1;
   setRow(
     "click",
-    "Treino de Supressão",
-    "Nível " + S.clickLvl + " · " + fmt(clickDamage()) + " dano/clique · " + fmtPct(share("click")) + " do dano",
+    "Treinamento de supressão",
+    msGlobal()
+      ? "Nível " + S.clickLvl + " · " + pctText(clickShare()) + " do DPS por clique · marco em " + toNext(S.clickLvl, C.click.milestone_every)
+      : "Nível " + S.clickLvl + " · " + fmt(clickDamage()) + " dano/clique · " + fmtPct(share("click")) + " do dano",
     rowPlan("click"),
-    clickMult() > 1 ? fmtMult(clickMult()) + "x - Bônus" : ""
+    msGlobal()
+      ? (clickMarks() > 0 ? "×" + fmtX(Math.pow(g, clickMarks())) + " global" : "")
+      : (clickMult() > 1 ? fmtMult(clickMult()) + "x - Bônus" : "")
   );
   C.agents.forEach((a) => {
+    const marks = agentMarks(a);
     const mult = agentMult(a);
-    const dmg = agentDmg(a);
     setRow(
       a.id,
       a.name,
-      "Nível " + agentLvl(a) + " · " + fmt(dmg) + " dano/s · " + fmtPct(share(a.id)) + " do dano",
+      msGlobal()
+        ? "Nível " + agentLvl(a) + " · " + fmt(agentDmg(a)) + " dano/s · marco em " + toNext(agentLvl(a), C.milestone.every)
+        : "Nível " + agentLvl(a) + " · " + fmt(agentDmg(a)) + " dano/s · " + fmtPct(share(a.id)) + " do dano",
       rowPlan(a.id),
-      mult > 1 ? fmtMult(mult) + "x - Bônus" : ""
+      msGlobal()
+        ? (marks > 0 ? "×" + fmtX(Math.pow(g, marks)) + " global" : "")
+        : (mult > 1 ? fmtMult(mult) + "x - Bônus" : "")
     );
   });
   $("raid").hidden = !inRaid;
@@ -1244,6 +1341,7 @@ async function init() {
   S = Object.assign(newState(), res.state || {});
   S.maxStage = Math.max(S.maxStage || 1, S.stage);
   S.cleared = Math.max(S.cleared || 0, (S.maxStage || 1) - 1);
+  if (res.state && !res.state.equipped) autoEquipBest();
   recalcDept();
   if (res.state && !res.state.ordeals) {
     (C.ordeals || []).forEach((o) => { if (o.stage <= S.cleared) S.ordeals[o.id] = true; });
@@ -1271,6 +1369,7 @@ async function init() {
     });
   });
   buildEquip();
+  buildSlots();
   buildSkills();
   buildDept();
   buildMelt();
@@ -1372,7 +1471,7 @@ async function init() {
   updateMusicBtn();
 
   $("bgm-melt").addEventListener("error", () => {
-    if (raid && raid.kind === "meltdown" && musicOn && musicStarted) $("bgm-raid").play().catch(() => {});
+    if (raid && raid.boss && raid.boss.music && musicOn && musicStarted) $("bgm-raid").play().catch(() => {});
   });
 
   $("music-toggle").addEventListener("click", () => {
@@ -1449,6 +1548,7 @@ async function init() {
       document.querySelectorAll(".tabs .tab").forEach((b) => b.classList.toggle("current", b === btn));
       $("equip").hidden = btn.dataset.tab !== "equip";
       $("ach").hidden = btn.dataset.tab !== "ach";
+      $("slots").hidden = btn.dataset.tab !== "equip";
     });
   });
 

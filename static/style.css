@@ -721,3 +721,26 @@ header .who { justify-self: end; }
   header .who { justify-self: center; }
   .top-modes { flex-wrap: wrap; justify-content: center; }
 }
+
+.slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 0.75rem; }
+.slots[hidden] { display: none; }
+.slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 0;
+  padding: 0.5rem 0.4rem;
+  background: var(--panel);
+  border: 1px solid var(--enk);
+  border-radius: 6px;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+.slot.empty { border-color: var(--line); border-style: dashed; cursor: default; }
+.slot-label { color: var(--muted); font-size: 0.7rem; letter-spacing: 0.05em; text-transform: uppercase; }
+.slot-name { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.8rem; }
+.slot-bonus { min-height: 1em; color: var(--enk); font-size: 0.75rem; }
+.slots-total { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 0.8rem; text-align: center; }
+.equip-item.equipped { border-color: var(--enk); }

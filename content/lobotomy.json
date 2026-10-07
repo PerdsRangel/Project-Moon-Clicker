@@ -7,9 +7,11 @@
   "cost_growth": 1.11,
   "milestone_every": 25,
   "milestone_mult": 2,
-  "dps_share": 0.04
+  "dps_share": 0.04,
+  "share_per_level": 0.0003,
+  "share_max": 1
   },
-  "milestone": { "every": 25, "mult": 3 },
+  "milestone": { "every": 25, "mult": 3, "global_mult": 1.10, "mode": "global"},
 
     "angela": {
     "name": "Angela",
@@ -37,7 +39,7 @@
     ]
   },
 
-    "department_points": { "per_stage": 1, "per_boss_stage": 2 },
+    "department_points": { "per_stage": 2, "per_boss_stage": 4 },
   "departments": [
     { "id": "control", "name": "Equipe de Controle", "sephirah": "Malkuth", "image": "malkuth.webp", "unlock_stage": 0, "chain_level": 3, "color": "#8a6d3b",
       "description": "Mais enkephalin por Abnormalidade derrotada.",
@@ -123,7 +125,7 @@
       "drops": [ { "id": "ordeal-dawn-gift", "type": "gift", "name": "Ordeal of Dawn Derrotada", "image": "ordeal-gift.png", "chance": 1, "bonus": 1.0 } ] },
 
     { "id": "ordeal-noon", "tier": "Meio-dia", "name": "Ordeal of Noon", "color": "Carmesim", "hex": "#c0392b",
-      "stage": 49, "rules": ["crimson"], "time": 25, "points": 15, "image": "noon-image.webp", "background": "ordeals-background.png",
+      "stage": 49, "rules": ["crimson"], "time": 25, "points": 10, "image": "noon-image.webp", "background": "ordeals-background.png",
       "enemies": [
         { "name": "Tenda", "risk": "Noon", "hp_mult": 2.4, "image": "noon-enemy1.webp" },
         { "name": "Clown?", "risk": "Noon", "hp_mult": 2.8, "image": "noon-enemy2.webp" },
@@ -142,7 +144,7 @@
       "drops": [ { "id": "ordeal-noon-gift", "type": "gift", "name": "Ordeal of Noon Derrotada", "image": "ordeal-gift.png", "chance": 1, "bonus": 5.0 } ] },
 
     { "id": "ordeal-dusk", "tier": "Entardecer", "name": "Ordeal of Dusk", "color": "Violeta", "hex": "#8e5bd4",
-      "stage": 74, "rules": ["violet"], "time": 60, "points": 20, "image": "dusk-image.webp", "background": "ordeals-background.png",
+      "stage": 74, "rules": ["violet"], "time": 60, "points": 10, "image": "dusk-image.webp", "background": "ordeals-background.png",
       "enemies": [
         { "name": "Big Worm", "risk": "Dusk", "hp_mult": 2.4, "image": "dusk-enemy1.webp" },
         { "name": "Amalgamation Clown", "risk": "Dusk", "hp_mult": 2.4, "image": "dusk-enemy2.webp" },
@@ -159,7 +161,7 @@
       "drops": [ { "id": "ordeal-dusk-gift", "type": "gift", "name": "Ordeal of Dusk Derrotada", "image": "ordeal-gift.png", "chance": 1, "bonus": 25 } ] },
 
     { "id": "ordeal-midnight", "tier": "Meia-noite", "name": "Ordeal of Midnight", "color": "Âmbar", "hex": "#d9822b",
-      "stage": 99, "rules": ["amber"], "time": 90, "points": 30, "image": "midnight-image.webp", "background": "ordeals-background.png",
+      "stage": 99, "rules": ["amber"], "time": 90, "points": 10, "image": "midnight-image.webp", "background": "ordeals-background.png",
       "enemies": [
         { "name": "Big Worm", "risk": "Midnight", "count": 2, "hp_mult": 0.8, "image": "dusk-enemy1.webp" },
         { "name": "Eternal Meal", "risk": "Midnight", "hp_mult": 1, "image": "midnight-enemy1.webp" },
@@ -249,9 +251,9 @@
         { "name": "Strange Egg", "risk": "ALEPH", "image": "nothing-raid1.webp", "hp": 210000000000000000 }
       ],
       "drops": [
-        { "id": "r8-arma", "type": "weapon", "name": "Mimicry Blade", "image": "nothing-weapon.webp", "chance": 0.02, "bonus": 100 },
-        { "id": "r8-armadura", "type": "armor", "name": "Mimicry Suit", "image": "nothing-armor.webp", "chance": 0.05, "bonus": 50 },
-        { "id": "r8-gift", "type": "gift", "name": "Mimicry", "image": "nothing-gift.webp", "chance": 0.005, "bonus": 250 }
+        { "id": "r8-arma", "type": "weapon", "name": "Mimicry Blade", "image": "nothing-weapon.webp", "chance": 0.02, "bonus": 150 },
+        { "id": "r8-armadura", "type": "armor", "name": "Mimicry Suit", "image": "nothing-armor.webp", "chance": 0.05, "bonus": 75 },
+        { "id": "r8-gift", "type": "gift", "name": "Mimicry", "image": "nothing-gift.webp", "chance": 0.005, "bonus": 300 }
       ] },
       { "name": "Apocalypse Bird", "risk": "ALEPH", "image": "apocalypse-bird.gif", "raid_hp": 1500000000000000000000, "time": 120,  "background": "apocabird-background5.webp", "raid_coins": 1000000,
       "waves": [
