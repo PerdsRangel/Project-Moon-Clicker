@@ -28,6 +28,10 @@ let angelaQueue = [];      // falas esperando para aparecer
 let angelaShowing = false;
 let angelaTimer = null;
 let angelaType = null;
+let inMelt = false;        // a tela dos Meltdowns está aberta?
+let meltRows = [];
+let achRows = [];
+let achKey = null;
 
 const $ = (id) => document.getElementById(id);
 
@@ -42,7 +46,7 @@ function fmt(n) {
 }
 
 function newState() {
-    return { version: 1, stage: 1, maxStage: 1, cleared: 0, equip: {}, raidEnk: 0, raidUp: {}, skills: {}, skillAuto: {}, seen: {}, raidWins: 0, deptOpened: false, dept: {}, enk: 0, clickLvl: 0, agents: {}, hp: 0, maxHp: 0, auto: true, ordeals: {}, };
+    return { version: 1, stage: 1, maxStage: 1, cleared: 0, equip: {}, raidEnk: 0, raidUp: {}, skills: {}, skillAuto: {}, seen: {}, raidWins: 0, deptOpened: false, dept: {}, enk: 0, clickLvl: 0, agents: {}, hp: 0, maxHp: 0, auto: true, ordeals: {}, ach: {}, };
 }
 
 /* ---------- regras ---------- */
@@ -71,7 +75,11 @@ const agentLvl = (a) => S.agents[a.id] || 0;
 const agentCost = (a) => a.base_cost * Math.pow(C.agent_cost_growth, agentLvl(a));
 const agentMult = (a) => Math.pow(C.milestone.mult, Math.floor(agentLvl(a) / C.milestone.every));
 const raidUpBonus = () => (C.raid_upgrades || []).reduce((sum, u) => sum + (S.raidUp[u.id] || 0) * u.bonus, 0);
-const dmgMult = () => (1 + raidUpBonus() + dB("damage") + dropList.reduce((sum, d) => sum + (S.equip[d.id] ? d.bonus : 0), 0)) * skillMult("damage");
+const achMult = (effect) => (C.meltdowns || []).reduce((m, x) => {
+  const a = x.achievement;
+  return a && S.ach[a.id] && a.effect === effect ? m * (1 + a.bonus) : m;
+}, 1);
+const dmgMult = () => (1 + raidUpBonus() + dB("damage") + dropList.reduce((sum, d) => sum + (S.equip[d.id] ? d.bonus : 0), 0)) * skillMult("damage") * achMult("damage");
 const agentDmg = (a) => a.base_dps * agentLvl(a) * agentMult(a) * dmgMult();
 const dps = () => C.agents.reduce((sum, a) => sum + agentDmg(a), 0);
 
@@ -172,7 +180,7 @@ function damage(amount) {
   if (S.hp <= 0) {
     const last = C.stage.max_stage || Infinity;
     const finished = S.stage > S.cleared && S.stage === last;
-    S.enk += S.maxHp * C.stage.reward_ratio * skillMult("money") * (1 + dB("money"));
+    S.enk += S.maxHp * C.stage.reward_ratio * skillMult("money") * (1 + dB("money")) * achMult("money");
     S.cleared = Math.max(S.cleared, S.stage);
     S.maxStage = Math.max(S.maxStage, Math.min(S.stage + 1, last));
     if (S.auto && S.stage < last) S.stage += 1;
@@ -287,21 +295,32 @@ function setRow(id, title, sub, p, bonus) {
   b.disabled = S.enk < p.cost;
 }
 
+function currentTrack() {
+  if (!inGame) return "menu";
+  if (raid) return raid.kind === "meltdown" && raid.boss.music ? "melt:" + raid.boss.id : "raid";
+  return isBoss(S.stage) ? "boss" : "normal";
+}
+
 function syncMusic(force) {
-  const track = !inGame ? "menu" : (raid ? "raid" : (isBoss(S.stage) ? "boss" : "normal"));
+  const track = currentTrack();
   if (!force && track === lastTrack) return;
   const changed = track !== lastTrack;
   lastTrack = track;
 
-  const audios = { menu: $("bgm-menu"), normal: $("bgm"), boss: $("bgm-boss"), raid: $("bgm-raid") };
+  const key = track.startsWith("melt:") ? "melt" : track;
+  const audios = { menu: $("bgm-menu"), normal: $("bgm"), boss: $("bgm-boss"), raid: $("bgm-raid"), melt: $("bgm-melt") };
   if (!(musicOn && musicStarted)) {
     Object.values(audios).forEach((a) => a.pause());
     return;
   }
 
-  Object.entries(audios).forEach(([name, a]) => { if (name !== track) a.pause(); });
-  const want = audios[track];
-  if ((track === "boss" || track === "raid") && changed) want.currentTime = 0;
+  Object.entries(audios).forEach(([name, a]) => { if (name !== key) a.pause(); });
+  const want = audios[key];
+  if (key === "melt") {
+    const url = "/static/audio/" + encodeURIComponent(raid.boss.music);
+    if (!want.src.endsWith(url)) want.src = url; // troca a faixa conforme o Meltdown
+  }
+  if ((key === "boss" || key === "raid") && changed) want.currentTime = 0;
   if (want.paused) want.play().catch(() => {});
 }
 
@@ -358,7 +377,7 @@ function setRaidEnemy() {
   if (e.image) img.src = "/static/img/" + e.image;
 }
 
-function startRaid(boss, keep) {
+function startRaid(boss, keep, kind) {
   if (!keep || !raidSession || raidSession.boss !== boss) {
     raidSession = { id: ++raidSessionId, boss, runs: 0, wins: 0, coins: 0, items: {}, log: [] };
   }
@@ -373,7 +392,7 @@ function startRaid(boss, keep) {
   }]);
   // carrega os fundos antes, para não piscar na troca de inimigo
   if (!keep) enemies.forEach((e) => { if (e.background) new Image().src = "/static/img/" + encodeURIComponent(e.background); });
-  raid = { boss, enemies, index: 0, maxHp: 0, hp: 0, time: (boss.time || C.raid_time || 60) + dB("boss_time"), result: null, drops: [], coins: 0, restartIn: null };
+  raid = { kind: kind || "raid", boss, enemies, index: 0, maxHp: 0, hp: 0, time: (boss.time || C.raid_time || 60) + dB("boss_time"), result: null, drops: [], coins: 0, restartIn: null };
   setRaidEnemy();
   render();
 }
@@ -390,6 +409,7 @@ function raidDamage(amount) {
   raid.hp = 0;
   raid.result = "win";
   if (raid.kind === "ordeal") { finishOrdeal(); return; }
+  if (raid.kind === "meltdown") { finishMeltdown(); return; }
   S.raidWins = (S.raidWins || 0) + 1;
   raid.coins = raid.boss.raid_coins || 5;
   S.raidEnk += raid.coins;
@@ -401,7 +421,7 @@ function raidDamage(amount) {
 function tickRaid(dt) {
   if (!raid) return;
   if (raid.result) {
-    if (raidAuto && raid.kind !== "ordeal") startRaid(raid.boss, true); // reinicia na hora
+    if (raidAuto && raid.kind === "raid") startRaid(raid.boss, true); // reinicia na hora
     return;
   }
   raidDamage(dps() * dt);
@@ -411,6 +431,8 @@ function tickRaid(dt) {
     raid.result = "lose";
     if (raid.kind === "ordeal") {
       if (raid.ordeal.say) angelaSay(raid.ordeal.say.lose, true);
+    } else if (raid.kind === "meltdown") {
+      if (raid.boss.say) angelaSay(raid.boss.say.lose, true);
     } else {
       logRaid("lose");
     }
@@ -585,21 +607,131 @@ function finishOrdeal() {
   if (o.stage === last) $("msg").textContent = "Você concluiu todas as " + last + " fases!";
 }
 
+const meltOpenStage = () => C.meltdown_unlock || 50;
+const meltUnlocked = () => S.cleared >= meltOpenStage();
+const achText = (a) => "+" + pctText(a.bonus) + (a.effect === "money" ? " de todo o enkephalin" : " de todo o dano");
+
+function buildMelt() {
+  const list = $("melt-list");
+  list.innerHTML = "";
+  meltRows = [];
+  (C.meltdowns || []).forEach((m) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "buy";
+    b.innerHTML = '<span><span class="t"></span><small class="melt-ach"></small><small class="melt-buff"></small></span><span class="cost"></span>';
+    b.querySelector(".t").textContent = m.name;
+    if (m.hex) b.style.borderLeft = "4px solid " + m.hex;
+    b.addEventListener("click", () => startMeltdown(m));
+    list.appendChild(b);
+    meltRows.push({ el: b, m });
+  });
+  if (meltRows.length === 0) list.textContent = "Nenhum Meltdown cadastrado ainda.";
+}
+
+function renderMelt() {
+  const open = meltUnlocked();
+  meltRows.forEach(({ el, m }) => {
+    const a = m.achievement;
+    const done = !!(a && S.ach[a.id]);
+    el.disabled = !open;
+    el.querySelector(".t").textContent = m.name + (done ? " ✓" : "");
+    el.querySelector(".melt-ach").textContent = a ? "Conquista: " + a.name : "";
+    el.querySelector(".melt-buff").textContent = a ? achText(a) : "";
+    el.querySelector(".cost").textContent = open ? "HP " + fmt(raidTotalHp(m)) : "Derrote a fase " + meltOpenStage();
+  });
+}
+
+function openMelt() { inMelt = true; render(); }
+function closeMelt() { inMelt = false; render(); }
+
+function startMeltdown(m) {
+  inMelt = false;
+  inRaid = true;
+  startRaid(m, true, "meltdown");
+  if (m.say) angelaSay(m.say.start);
+}
+
+function finishMeltdown() {
+  const m = raid.boss;
+  const a = m.achievement;
+  if (a && !S.ach[a.id]) {
+    S.ach[a.id] = true;
+    raid.achGained = a;
+  }
+  if (m.say) angelaSay(m.say.win);
+  save(false);
+}
+
+function buildAch() {
+  const box = $("ach");
+  box.innerHTML = "";
+  achKey = null;
+  achRows = (C.meltdowns || []).filter((m) => m.achievement).map((m) => {
+    const a = m.achievement;
+    const row = document.createElement("div");
+    row.className = "equip-item ach-item locked";
+    row.innerHTML =
+      '<div class="equip-icon"><img alt="" draggable="false" hidden></div>' +
+      '<div><div class="equip-name"></div><small class="ach-desc"></small><small class="ach-buff"></small></div>';
+    const img = row.querySelector("img");
+    if (a.image) {
+      img.src = "/static/img/" + a.image;
+      img.hidden = false;
+    }
+    img.addEventListener("error", () => { img.hidden = true; });
+    row.querySelector(".equip-name").textContent = a.name;
+    box.appendChild(row);
+    return { row, m, a };
+  });
+  const empty = document.createElement("p");
+  empty.id = "ach-empty";
+  empty.className = "msg";
+  empty.textContent = "Nenhuma conquista disponível. Derrote a fase 50 para liberar os Sephirah Meltdowns.";
+  box.appendChild(empty);
+}
+
+function renderAch() {
+  // só atualiza quando as conquistas obtidas ou o progresso mudam
+  const owned = Object.keys(S.ach).filter((k) => S.ach[k]).sort().join(",");
+  const key = owned + "|" + S.cleared;
+  if (key === achKey) return;
+  achKey = key;
+  let visible = 0;
+  achRows.forEach(({ row, m, a }) => {
+    const has = !!S.ach[a.id];
+    const show = has || meltUnlocked();
+    row.style.display = show ? "" : "none";
+    if (show) visible++;
+    row.classList.toggle("locked", !has);
+    row.querySelector(".ach-desc").textContent = has ? a.description : "Derrote " + m.name + " para obter.";
+    row.querySelector(".ach-buff").textContent = achText(a);
+  });
+  $("ach-empty").hidden = visible > 0;
+  const got = achRows.filter((r) => S.ach[r.a.id]).length;
+  document.querySelector('.tab[data-tab="ach"]').textContent = "Conquistas (" + got + "/" + achRows.length + ")";
+}
+
 function renderRaid() {
   setRaidBackground(raid ? raid.enemies[raid.index].background : null);
   $("raid-select").hidden = !!raid;
   $("raid-fight").hidden = !raid;
   if (!raid) { renderRaidShop(); return; }
 
-  const ordeal = raid.kind === "ordeal";
+  const kind = raid.kind || "raid";
+  const special = kind !== "raid"; // Ordeal ou Meltdown
+  const tag = kind === "ordeal" ? " (Ordeal)" : kind === "meltdown" ? " (Meltdown)" : " (Boss Raid)";
+  const title = kind === "ordeal" ? raid.ordeal.name : kind === "meltdown" ? raid.boss.name : "";
+  const hex = kind === "ordeal" ? raid.ordeal.hex : kind === "meltdown" ? raid.boss.hex : "";
   const e = raid.enemies[raid.index];
+
   $("raid-name").textContent = e.name;
-  $("raid-risk").textContent = e.risk + (e.isBoss ? (ordeal ? " (Ordeal)" : " (Boss Raid)") : "");
+  $("raid-risk").textContent = e.risk + (e.isBoss ? tag : "");
   $("raid-monster").classList.toggle("boss", e.isBoss);
-  $("raid-monster").style.borderColor = ordeal ? (raid.ordeal.hex || "") : "";
+  $("raid-monster").style.borderColor = hex || "";
   $("raid-progress").textContent =
     (raid.enemies.length > 1 ? "· Inimigo " + (raid.index + 1) + " de " + raid.enemies.length : "") +
-    (ordeal ? " · " + raid.ordeal.name : "");
+    (title ? " · " + title : "");
   $("raid-time").textContent = Math.ceil(raid.time);
   $("raid-hp-fill").style.width = Math.max(0, (raid.hp / raid.maxHp) * 100) + "%";
   $("raid-hp-text").textContent = fmt(Math.max(0, raid.hp)) + " / " + fmt(raid.maxHp) + " HP";
@@ -607,23 +739,31 @@ function renderRaid() {
   const res = $("raid-result");
   const dropText = raid.drops.length
     ? " Drop: " + raid.drops.map((d) => d.name).join(", ") + "!"
-    : (ordeal ? "" : " Nenhum drop desta vez.");
+    : (kind === "raid" ? " Nenhum drop desta vez." : "");
   if (raid.result === "win") {
-    res.textContent = ordeal
-      ? "Ordeal concluído! +" + (raid.ordeal.points || 0) + " pontos de departamento." + dropText
-      : "Chefe derrotado! +" + fmtCoin(raid.coins) + " Caixas de Enkephalin Raid." + dropText;
+    if (kind === "ordeal") {
+      res.textContent = "Ordeal concluído! +" + (raid.ordeal.points || 0) + " pontos de departamento." + dropText;
+    } else if (kind === "meltdown") {
+      res.textContent = raid.achGained
+        ? "Meltdown superado! Conquista: " + raid.achGained.name + " (" + achText(raid.achGained) + ")."
+        : "Meltdown superado! A conquista já era sua.";
+    } else {
+      res.textContent = "Chefe derrotado! +" + fmtCoin(raid.coins) + " Caixas de Enkephalin Raid." + dropText;
+    }
   } else if (raid.result === "lose") {
-    res.textContent = ordeal ? "O Ordeal prevaleceu. Tente de novo." : "O tempo acabou. O chefe escapou.";
+    res.textContent = kind === "ordeal" ? "O Ordeal prevaleceu. Tente de novo."
+      : kind === "meltdown" ? "O Meltdown prevaleceu. Tente de novo."
+      : "O tempo acabou. O chefe escapou.";
   } else {
-    res.textContent = ordeal ? ordealRules(raid) : "";
+    res.textContent = kind === "ordeal" ? ordealRules(raid) : "";
   }
   res.className = "raid-result" + (raid.result ? " " + raid.result : "");
   $("raid-retry").hidden = !raid.result;
-  $("raid-back").textContent = ordeal ? "Voltar ao jogo" : "Escolher outro chefe";
+  $("raid-back").textContent = kind === "ordeal" ? "Voltar ao jogo" : kind === "meltdown" ? "Voltar aos Meltdowns" : "Escolher outro chefe";
   $("raid-monster").disabled = !!raid.result;
-  $("raid-auto").parentElement.style.display = ordeal ? "none" : "";
-  document.querySelector(".raid-log").style.display = ordeal ? "none" : "";
-  if (!ordeal) renderRaidLog();
+  $("raid-auto").parentElement.style.display = special ? "none" : "";
+  document.querySelector(".raid-log").style.display = special ? "none" : "";
+  if (!special) renderRaidLog();
 }
 
 function goToStage(n) {
@@ -1035,6 +1175,7 @@ function render() {
   $("dps").textContent = fmt(dps());
   renderNav();
   renderEquip();
+  renderAch();
   renderSkills();
   const dp = deptPoints();
   $("dept-open").textContent = "Departamentos" + (dp > 0 ? " (" + fmtCoin(dp) + ")" : "");
@@ -1067,6 +1208,9 @@ function render() {
   });
   $("raid").hidden = !inRaid;
   if (inRaid) renderRaid();
+  $("melt").hidden = !inMelt;
+  if (inMelt) renderMelt();
+  $("melt-open").disabled = !meltUnlocked();
   syncMusic();
 }
 
@@ -1086,6 +1230,9 @@ async function init() {
   C = packs.lobotomy;
   (C.raidbosses || []).forEach((b, i) => { b.drops = dropsOf(b, i); });
   dropList = allDrops();
+  (C.meltdowns || []).forEach((m) => {
+    if (!m.raid_hp) m.raid_hp = stageHp(C.meltdown_base_stage || 50) * (m.hp_mult || 1);
+  });
 
   player = localStorage.getItem("idle_player");
   while (!player || !/^[\w-]{1,20}$/.test(player)) {
@@ -1126,6 +1273,10 @@ async function init() {
   buildEquip();
   buildSkills();
   buildDept();
+  buildMelt();
+  buildAch();
+  $("melt-open").addEventListener("click", openMelt);
+  $("melt-close").addEventListener("click", closeMelt);
   $("dept-open").addEventListener("click", openDept);
   $("dept-close").addEventListener("click", closeDept);
   $("dept-respec").addEventListener("click", () => { S.dept = {}; recalcDept(); renderDept(); });
@@ -1198,10 +1349,11 @@ async function init() {
   $("raid-close").addEventListener("click", closeRaid);
   $("raid-retry").addEventListener("click", () => {
     if (raid.kind === "ordeal") startOrdeal(raid.ordeal);
-    else startRaid(raid.boss, true);
+    else startRaid(raid.boss, true, raid.kind);
   });
   $("raid-back").addEventListener("click", () => {
     if (raid && raid.kind === "ordeal") closeRaid();
+    else if (raid && raid.kind === "meltdown") { raid = null; inRaid = false; inMelt = true; render(); }
     else { raid = null; render(); }
   });
   $("raid-auto").addEventListener("change", (e) => { raidAuto = e.target.checked; });
@@ -1210,7 +1362,7 @@ async function init() {
 
   const savedVol = localStorage.getItem("idle_music_vol");
   const vol = (savedVol === null ? 30 : Number(savedVol)) / 100;
-  ["bgm", "bgm-boss", "bgm-menu", "bgm-raid"].forEach((id) => { $(id).volume = vol; });
+  ["bgm", "bgm-boss", "bgm-menu", "bgm-raid", "bgm-melt"].forEach((id) => { $(id).volume = vol; });
   $("music-volume").value = Math.round(vol * 100);
   musicOn = localStorage.getItem("idle_music") !== "off";
 
@@ -1218,6 +1370,10 @@ async function init() {
     $("music-toggle").textContent = "Música: " + (musicOn && musicStarted ? "ligada" : "desligada");
   };
   updateMusicBtn();
+
+  $("bgm-melt").addEventListener("error", () => {
+    if (raid && raid.kind === "meltdown" && musicOn && musicStarted) $("bgm-raid").play().catch(() => {});
+  });
 
   $("music-toggle").addEventListener("click", () => {
     if (musicOn && musicStarted) {
@@ -1234,7 +1390,7 @@ async function init() {
 
   $("music-volume").addEventListener("input", (e) => {
     const v = e.target.value / 100;
-    ["bgm", "bgm-boss", "bgm-menu", "bgm-raid"].forEach((id) => { $(id).volume = v; });
+    ["bgm", "bgm-boss", "bgm-menu", "bgm-raid", "bgm-melt"].forEach((id) => { $(id).volume = v; });
     localStorage.setItem("idle_music_vol", e.target.value);
   });
 
@@ -1253,7 +1409,7 @@ async function init() {
   }
 
   setInterval(() => {
-    if (!inGame || inDept) return;
+    if (!inGame || inDept || inMelt) return;
     checkAngela();
     const gate = inRaid ? null : pendingOrdeal();
     if (gate && !S.seen["warn-" + gate.id]) {
@@ -1287,6 +1443,28 @@ async function init() {
     S.enk += v;
     $("cheat-msg").textContent = "+" + fmt(v) + " caixas de enkephalin adicionadas.";
     render();
+  });
+  document.querySelectorAll(".tabs .tab").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".tabs .tab").forEach((b) => b.classList.toggle("current", b === btn));
+      $("equip").hidden = btn.dataset.tab !== "equip";
+      $("ach").hidden = btn.dataset.tab !== "ach";
+    });
+  });
+
+  const closeSettings = () => {
+    $("settings-menu").hidden = true;
+    $("settings-toggle").setAttribute("aria-expanded", "false");
+  };
+  $("settings-toggle").addEventListener("click", (e) => {
+    e.stopPropagation();
+    const willOpen = $("settings-menu").hidden;
+    $("settings-menu").hidden = !willOpen;
+    $("settings-toggle").setAttribute("aria-expanded", willOpen ? "true" : "false");
+  });
+  $("settings-menu").addEventListener("click", closeSettings);
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".settings")) closeSettings();
   });
   render();
 }

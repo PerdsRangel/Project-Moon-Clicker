@@ -26,6 +26,7 @@
       ] },
       { "id": "clear-35", "when": "clear", "stage": 35, "text": "Greed foi liberada. Enkephalin extra para a empresa. E para você." },
       { "id": "clear-50", "when": "clear", "stage": 50, "text": "A Equipe Coelho está autorizada a entrar em campo. Não a deixe esperando." },
+      { "id": "clear-50-melt", "when": "clear", "stage": 50, "text": "Os Sephirah Meltdowns foram liberados, {jogador}. Cada um deles guarda uma conquista." },
       { "id": "raid-1", "when": "raid_win", "count": 1, "text": "Uma Raid concluída. As Caixas de Enkephalin Raid podem ser trocadas na loja da Raid." },
       { "id": "drop-1", "when": "drop", "text": "Um equipamento foi extraído. Estar bem equipado também faz parte do trabalho." },
       { "id": "dept-1", "when": "dept", "text": "Os departamentos aguardam suas ordens. Os pontos vêm do progresso, então gaste-os com sabedoria." },
@@ -248,9 +249,9 @@
         { "name": "Strange Egg", "risk": "ALEPH", "image": "nothing-raid1.webp", "hp": 210000000000000000 }
       ],
       "drops": [
-        { "id": "r8-arma", "type": "weapon", "name": "Mimicry Blade", "image": "nothing-weapon.webp", "chance": 0.02, "bonus": 2.0 },
-        { "id": "r8-armadura", "type": "armor", "name": "Mimicry Suit", "image": "nothing-armor.webp", "chance": 0.05, "bonus": 1.0 },
-        { "id": "r8-gift", "type": "gift", "name": "Mimicry", "image": "nothing-gift.webp", "chance": 0.005, "bonus": 3.5 }
+        { "id": "r8-arma", "type": "weapon", "name": "Mimicry Blade", "image": "nothing-weapon.webp", "chance": 0.02, "bonus": 100 },
+        { "id": "r8-armadura", "type": "armor", "name": "Mimicry Suit", "image": "nothing-armor.webp", "chance": 0.05, "bonus": 50 },
+        { "id": "r8-gift", "type": "gift", "name": "Mimicry", "image": "nothing-gift.webp", "chance": 0.005, "bonus": 250 }
       ] },
       { "name": "Apocalypse Bird", "risk": "ALEPH", "image": "apocalypse-bird.gif", "raid_hp": 1500000000000000000000, "time": 120,  "background": "apocabird-background5.webp", "raid_coins": 1000000,
       "waves": [
@@ -260,11 +261,11 @@
         { "name": "Big Eyes", "risk": "?", "image": "bigbird-egg.webp", "hp": 300000000000000000000, "background": "apocabird-background4.webp" }
       ],
       "drops": [
-        { "id": "r9-arma", "type": "weapon", "name": "Twilight", "image": "apoca-weapon.webp", "chance": 0.02, "bonus": 10.0 },
-        { "id": "r9-armadura", "type": "armor", "name": "Twilight Suit", "image": "apoca-armor.webp", "chance": 0.05, "bonus": 5.0 },
-        { "id": "r9-gift", "type": "gift", "name": "Through the Dark Twilight", "image": "apoca-gift.webp", "chance": 0.005, "bonus": 30.0 }
+        { "id": "r9-arma", "type": "weapon", "name": "Twilight", "image": "apoca-weapon.webp", "chance": 0.02, "bonus": 500 },
+        { "id": "r9-armadura", "type": "armor", "name": "Twilight Suit", "image": "apoca-armor.webp", "chance": 0.05, "bonus": 250 },
+        { "id": "r9-gift", "type": "gift", "name": "Through the Dark Twilight", "image": "apoca-gift.webp", "chance": 0.005, "bonus": 1000 }
       ] },
-        { "name": "White Night", "risk": "ALEPH", "image": "white-night-raid.webp", "raid_hp": 25000000000000000000000, "time": 120,  "background": "religion-background.png", "raid_coins": 25000000,
+        { "name": "White Night", "risk": "ALEPH", "image": "white-night-raid.webp", "raid_hp": 25000000000000000000000, "time": 120,  "background": "religion-background.png", "raid_coins": 25000000, "music": "whitenight.mp3",
       "waves": [
         { "name": "Wand Apostle", "risk": "???", "image": "apostle1.webp", "hp": 1000000000000000000000, "background": "religion-background.png" },
         { "name": "Spear Apostle", "risk": "???", "image": "apostle2.webp", "hp": 1000000000000000000000, "background": "religion-background.png" },
@@ -280,9 +281,9 @@
         { "name": "Guardian Apostle", "risk": "???", "image": "apostle4.webp", "hp": 3000000000000000000000, "background": "religion-background.png" }
       ],
       "drops": [
-        { "id": "r10-arma", "type": "weapon", "name": "Paradise Weapon", "image": "white-weapon.webp", "chance": 0.02, "bonus": 25.0 },
-        { "id": "r10-armadura", "type": "armor", "name": "Paradise Suit", "image": "white-armor.webp", "chance": 0.05, "bonus": 10.0 },
-        { "id": "r10-gift", "type": "gift", "name": "Paradise Lost", "image": "white-gift.webp", "chance": 0.005, "bonus": 50.0 }
+        { "id": "r10-arma", "type": "weapon", "name": "Paradise Weapon", "image": "white-weapon.webp", "chance": 0.02, "bonus": 3000 },
+        { "id": "r10-armadura", "type": "armor", "name": "Paradise Suit", "image": "white-armor.webp", "chance": 0.05, "bonus": 1000 },
+        { "id": "r10-gift", "type": "gift", "name": "Paradise Lost", "image": "white-gift.webp", "chance": 0.005, "bonus": 7500 }
       ] }
   ],
 
@@ -338,5 +339,61 @@
     { "id": "rank4", "name": "Employees - Rank IV", "base_cost": 10000, "base_dps": 2000 },
     { "id": "rank5", "name": "Employees - Rank V", "base_cost": 100000, "base_dps": 20000 },
     { "id": "rank6", "name": "Employees - Rank EX", "base_cost": 1000000, "base_dps": 200000 }
+  ],
+
+  "meltdown_unlock": 50,
+  "meltdown_base_stage": 50,
+  "meltdowns": [
+    { "id": "melt-malkuth", "name": "Malkuth Meltdown", "sephirah": "Malkuth", "risk": "Sephirah", "hex": "#8a6d3b", "image": "malkuth-meltdown.gif", "background": "malkuth-background.png", "time": 999, "raid_hp": 1000000000000,
+      "music": "malkuth-meltdown.mp3",
+      "achievement": { "id": "ach-malkuth", "name": "Malkuth Meltdown Completed", "image": "malkuth.webp", "description": "Descrição a definir.", "effect": "money", "bonus": 0.10 } },
+
+    { "id": "melt-yesod", "name": "Yesod Meltdown", "sephirah": "Yesod", "risk": "Sephirah", "hex": "#8e5bd4", "image": "yesod-meltdown.gif", "background": "yesod-background.png", "time": 999, "raid_hp": 50000000000000,
+      "music": "yesod-meltdown.mp3",
+      "achievement": { "id": "ach-yesod", "name": "Yesod Meltdown Completed", "image": "yesod.webp", "description": "Descrição a definir.", "effect": "damage", "bonus": 0.10 } },
+
+    { "id": "melt-hod", "name": "Hod Meltdown", "sephirah": "Hod", "risk": "Sephirah", "hex": "#d9822b", "image": "hod-meltdown.webp", "background": "hod-background.png", "time": 999, "raid_hp": 1000000000000000,
+      "music": "hod-meltdown.mp3",
+      "achievement": { "id": "ach-hod", "name": "Hod Meltdown Completed", "image": "hod.webp", "description": "Descrição a definir.", "effect": "money", "bonus": 0.15 } },
+
+    { "id": "melt-netzach", "name": "Netzach Meltdown", "sephirah": "Netzach", "risk": "Sephirah", "hex": "#3fa05a", "image": "netzach-meltdown.webp", "background": "netzach-background.png", "time": 999, "raid_hp": 25000000000000000,
+      "music": "netzach-meltdown.mp3",
+      "achievement": { "id": "ach-netzach", "name": "Netzach Meltdown Completed", "image": "netzach.webp", "description": "Descrição a definir.", "effect": "damage", "bonus": 0.15 } },
+
+    { "id": "melt-tiphereth", "name": "Tiphereth Meltdown", "sephirah": "Tiphereth", "risk": "Sephirah", "hex": "#d9b72b", "image": "tiphereth-meltdown3.webp", "background": "tiphereth-background.png", "time": 999, "raid_hp": 100000000000000000,
+      "music": "tiphereth-meltdown.mp3",
+      "waves": [
+        { "name": "Tiphereth", "risk": "Sephirah", "image": "tiphereth-meltdown1.webp", "hp": 30000000000000000 },
+        { "name": "Tiphereth", "risk": "Sephirah", "image": "tiphereth-meltdown2.webp", "hp": 50000000000000000 }
+      ],
+      "achievement": { "id": "ach-tiphereth", "name": "Tiphereth Meltdown Completed", "image": "tiphereth.webp", "description": "Descrição a definir.", "effect": "money", "bonus": 0.20 } },
+
+    { "id": "melt-gebura", "name": "The Red Mist", "sephirah": "Gebura", "risk": "Sephirah", "hex": "#c0392b", "image": "redmist4.webp", "background": "gebura-background.png", "time": 999, "raid_hp": 1000000000000000000,
+      "music": "gebura-meltdown.mp3",
+      "waves": [
+        { "name": "The Red Mist", "risk": "Sephirah", "image": "redmist1.gif", "hp": 300000000000000000 },
+        { "name": "The Red Mist", "risk": "Sephirah", "image": "redmist2.webp", "hp": 500000000000000000 },
+        { "name": "The Red Mist", "risk": "Sephirah", "image": "redmist3.gif", "hp": 700000000000000000 }
+      ],
+      "achievement": { "id": "ach-gebura", "name": "The Red Mist Completed", "image": "gebura.webp", "description": "Descrição a definir.", "effect": "damage", "bonus": 0.25 } },
+
+    { "id": "melt-chesed", "name": "Chesed Meltdown", "sephirah": "Chesed", "risk": "Sephirah", "hex": "#3b7fd4", "image": "chesed-meltdown2.webp", "background": "chesed-background.png", "time": 999, "raid_hp": 10000000000000000000,
+      "music": "chesed-meltdown.mp3",
+      "waves": [
+        { "name": "Chesed", "risk": "Sephirah", "image": "chesed-meltdown1.gif", "hp": 5000000000000000000 }
+      ],
+      "achievement": { "id": "ach-chesed", "name": "Chesed Meltdown Completed", "image": "chesed.webp", "description": "Descrição a definir.", "effect": "money", "bonus": 0.30 } },
+
+    { "id": "melt-hokma", "name": "Hokma Meltdown", "sephirah": "Hokma", "risk": "Sephirah", "hex": "#b0b7c3", "image": "hokma-meltdown2.webp", "background": "hokma-background.png", "time": 999, "raid_hp": 50000000000000000000,
+    "music": "hokma-meltdown.mp3",
+    "waves": [
+        { "name": "Hokma", "risk": "Sephirah", "image": "hokma-meltdown1.gif", "hp": 25000000000000000000 }
+      ],
+    "achievement": { "id": "ach-hokma", "name": "Hokma Meltdown Completed", "image": "hokma.webp", "description": "Descrição a definir.", "effect": "money", "bonus": 0.50 } },
+
+    { "id": "melt-binah", "name": "An Arbiter", "sephirah": "Binah", "risk": "Sephirah", "hex": "#E6BD37", "image": "binah-meltdown.webp", "background": "binah-background.png", "time": 999, "raid_hp": 1000000000000000000000,
+      "music": "binah-meltdown.mp3",
+      "achievement": { "id": "ach-binah", "name": "An Arbiter Completed", "image": "binah.webp", "description": "Descrição a definir.", "effect": "damage", "bonus": 0.50 } }
   ]
 }
+

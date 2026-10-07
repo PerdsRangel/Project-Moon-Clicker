@@ -12,6 +12,11 @@
       <img class="enk-icon" src="{{ url_for('static', filename='img/enkephalin.png') }}" alt="" draggable="false" onerror="this.hidden=true">
       <span id="enk">0</span> <small>Caixas de Enkephalin</small>
     </div>
+    <nav class="top-modes" aria-label="Modos de jogo">
+      <button id="raid-open" class="top-mode t-raid" type="button">Boss Raid</button>
+      <button id="dept-open" class="top-mode t-dept" type="button">Departamentos</button>
+      <button id="melt-open" class="top-mode t-melt" type="button" title="Libera ao derrotar a fase 50">Sephirah Meltdowns</button>
+    </nav>
     <div class="who"><span id="player"></span> · <span id="dps">0</span> dano/s</div>
   </header>
 
@@ -31,8 +36,6 @@
       </div>
       <p id="hint" class="hint">Clique na Abnormalidade para suprimi-la.</p>
       <label class="auto"><input id="auto" type="checkbox" checked> Avançar automaticamente</label>
-      <button id="raid-open" class="prev" type="button">Boss Raid</button>
-      <button id="dept-open" class="prev" type="button">Departamentos</button>
     </section>
 
     <section class="shop">
@@ -47,12 +50,21 @@
       <p id="msg" class="msg"></p>
     </section>
     <section class="equip-panel">
-      <h2>Equipamentos</h2>
+      <div class="tabs" role="tablist">
+        <button type="button" class="tab current" data-tab="equip" role="tab">Equipamentos</button>
+        <button type="button" class="tab" data-tab="ach" role="tab">Conquistas</button>
+      </div>
       <div id="equip" class="equip-list"></div>
+      <div id="ach" class="ach-list" hidden></div>
     </section>
   </main>
-  <button id="cheats-open" class="reset cheats" type="button">Cheats</button>
-  <button id="reset-open" class="reset" type="button">Resetar Save</button>
+  <div class="settings">
+    <button id="settings-toggle" class="settings-btn" type="button" aria-expanded="false">⚙ Opções</button>
+    <div id="settings-menu" class="settings-menu" hidden>
+      <button id="cheats-open" type="button">Cheats</button>
+      <button id="reset-open" type="button">Resetar Save</button>
+    </div>
+  </div>
   <dialog id="reset-dialog">
     <p>Apagar todo o seu progresso e recomeçar do zero? Isso não pode ser desfeito.</p>
     <div class="dlg-actions">
@@ -73,6 +85,7 @@
       <button id="cheat-money-give" type="button">Dar Enkephalin</button>
     </div>
   </dialog>
+  <audio id="bgm-melt" loop preload="none"></audio>
   <audio id="bgm" src="{{ url_for('static', filename='audio/backgroundmain.mp3') }}" loop preload="auto"></audio>
   <audio id="bgm-boss" src="{{ url_for('static', filename='audio/bossmusic.mp3') }}" loop preload="auto"></audio>
   <div class="music">
@@ -137,6 +150,14 @@
     <div class="angela-body">
       <div id="angela-name" class="angela-name">Angela</div>
       <p class="angela-text"><span id="angela-typed"></span><span id="angela-rest" class="angela-rest"></span></p>
+    </div>
+  </div>
+  <div id="melt" class="melt" hidden>
+    <div class="melt-view">
+      <h2>Sephirah Meltdowns</h2>
+      <p class="melt-hint">Enfrente o colapso de cada Sephirah. A primeira vitória em cada um dá uma conquista permanente.</p>
+      <div id="melt-list"></div>
+      <button id="melt-close" class="prev" type="button">Voltar ao jogo</button>
     </div>
   </div>
   <script src="{{ url_for('static', filename='game.js') }}"></script>
