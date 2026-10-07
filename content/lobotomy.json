@@ -93,9 +93,9 @@
   ],
 
     "skills": [
-    { "id": "skill-dps-1", "name": "E.G.O Equipment", "image": "butterfly-armor.webp", "effect": "damage", "mult": 1.5, "duration": 15, "cooldown": 45, "description": "Aumenta seu DPS em 1.5x durante 15s.", "unlock_stage": 10 },
+    { "id": "skill-dps-1", "name": "E.G.O Equipment", "image": "butterfly-armor.webp", "effect": "damage", "mult": 1.5, "duration": 15, "cooldown": 60, "description": "Aumenta seu DPS em 1.5x durante 15s.", "unlock_stage": 10 },
     { "id": "skill-money", "name": "Greed", "image": "greed-skill.webp", "effect": "money", "mult": 3, "duration": 30, "cooldown": 120, "description": "Aumenta seu ganho de Enkephalin em 3x durante 30s.", "unlock_stage": 35 },
-    { "id": "skill-dps-2", "name": "Rabbit Team", "image": "rabbit-skill.webp", "effect": "damage", "mult": 3, "duration": 15, "cooldown": 75, "cost_pct": 5, "description": "Chame o Rabbit Team e aumente seu DPS em 3x durante 15s, mas eles não trabalham de graça. (5% de seu Enkephalin Atual).", "unlock_stage": 50, "ally_image": "rabbit-team.webp" }
+    { "id": "skill-dps-2", "name": "Rabbit Team", "image": "rabbit-skill.webp", "effect": "damage", "mult": 3, "duration": 15, "cooldown": 60, "cost_pct": 5, "description": "Chame o Rabbit Team e aumente seu DPS em 3x durante 15s, mas eles não trabalham de graça. (5% de seu Enkephalin Atual).", "unlock_stage": 50, "ally_image": "rabbit-team.webp" }
   ],
 
   "raid_upgrades": [
