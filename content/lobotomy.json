@@ -344,21 +344,21 @@
   "meltdown_unlock": 50,
   "meltdown_base_stage": 50,
   "meltdowns": [
-    { "id": "melt-malkuth", "name": "Malkuth Meltdown", "sephirah": "Malkuth", "risk": "Sephirah", "hex": "#8a6d3b", "image": "malkuth-meltdown.gif", "background": "malkuth-background.png", "time": 999, "raid_hp": 1000000000000,
+    { "id": "melt-malkuth", "name": "Malkuth Meltdown", "sephirah": "Malkuth", "risk": "Sephirah", "hex": "#8a6d3b", "image": "malkuth-meltdown.gif", "background": "malkuth-background.png", "time": 999, "raid_hp": 10000000000000,
       "music": "malkuth-meltdown.mp3",
-      "achievement": { "id": "ach-malkuth", "name": "Malkuth Meltdown Completed", "image": "malkuth.webp", "description": "Descrição a definir.", "effect": "money", "bonus": 0.10 } },
+      "achievement": { "id": "ach-malkuth", "name": "Malkuth Meltdown Completed", "image": "malkuth.webp", "description": "'I will try my best to help you to enhance the performance of this facility.'", "effect": "money", "bonus": 0.10 } },
 
     { "id": "melt-yesod", "name": "Yesod Meltdown", "sephirah": "Yesod", "risk": "Sephirah", "hex": "#8e5bd4", "image": "yesod-meltdown.gif", "background": "yesod-background.png", "time": 999, "raid_hp": 50000000000000,
       "music": "yesod-meltdown.mp3",
-      "achievement": { "id": "ach-yesod", "name": "Yesod Meltdown Completed", "image": "yesod.webp", "description": "Descrição a definir.", "effect": "damage", "bonus": 0.10 } },
+      "achievement": { "id": "ach-yesod", "name": "Yesod Meltdown Completed", "image": "yesod.webp", "description": "'You are supposed to set an example for others, manager.'", "effect": "damage", "bonus": 0.10 } },
 
     { "id": "melt-hod", "name": "Hod Meltdown", "sephirah": "Hod", "risk": "Sephirah", "hex": "#d9822b", "image": "hod-meltdown.webp", "background": "hod-background.png", "time": 999, "raid_hp": 1000000000000000,
       "music": "hod-meltdown.mp3",
-      "achievement": { "id": "ach-hod", "name": "Hod Meltdown Completed", "image": "hod.webp", "description": "Descrição a definir.", "effect": "money", "bonus": 0.15 } },
+      "achievement": { "id": "ach-hod", "name": "Hod Meltdown Completed", "image": "hod.webp", "description": "'I'm not very skillful in many areas, but I'll try not to be a hindrance!'", "effect": "money", "bonus": 0.15 } },
 
     { "id": "melt-netzach", "name": "Netzach Meltdown", "sephirah": "Netzach", "risk": "Sephirah", "hex": "#3fa05a", "image": "netzach-meltdown.webp", "background": "netzach-background.png", "time": 999, "raid_hp": 25000000000000000,
       "music": "netzach-meltdown.mp3",
-      "achievement": { "id": "ach-netzach", "name": "Netzach Meltdown Completed", "image": "netzach.webp", "description": "Descrição a definir.", "effect": "damage", "bonus": 0.15 } },
+      "achievement": { "id": "ach-netzach", "name": "Netzach Meltdown Completed", "image": "netzach.webp", "description": "'The Fearlessness to keep on Living.'", "effect": "damage", "bonus": 0.15 } },
 
     { "id": "melt-tiphereth", "name": "Tiphereth Meltdown", "sephirah": "Tiphereth", "risk": "Sephirah", "hex": "#d9b72b", "image": "tiphereth-meltdown3.webp", "background": "tiphereth-background.png", "time": 999, "raid_hp": 100000000000000000,
       "music": "tiphereth-meltdown.mp3",
@@ -366,7 +366,7 @@
         { "name": "Tiphereth", "risk": "Sephirah", "image": "tiphereth-meltdown1.webp", "hp": 30000000000000000 },
         { "name": "Tiphereth", "risk": "Sephirah", "image": "tiphereth-meltdown2.webp", "hp": 50000000000000000 }
       ],
-      "achievement": { "id": "ach-tiphereth", "name": "Tiphereth Meltdown Completed", "image": "tiphereth.webp", "description": "Descrição a definir.", "effect": "money", "bonus": 0.20 } },
+      "achievement": { "id": "ach-tiphereth", "name": "Tiphereth Meltdown Completed", "image": "tiphereth.webp", "description": "'I want to believe that there's a reason for every sacrifice that was made.'", "effect": "money", "bonus": 0.20 } },
 
     { "id": "melt-gebura", "name": "The Red Mist", "sephirah": "Gebura", "risk": "Sephirah", "hex": "#c0392b", "image": "redmist4.webp", "background": "gebura-background.png", "time": 999, "raid_hp": 1000000000000000000,
       "music": "gebura-meltdown.mp3",
@@ -375,25 +375,25 @@
         { "name": "The Red Mist", "risk": "Sephirah", "image": "redmist2.webp", "hp": 500000000000000000 },
         { "name": "The Red Mist", "risk": "Sephirah", "image": "redmist3.gif", "hp": 700000000000000000 }
       ],
-      "achievement": { "id": "ach-gebura", "name": "The Red Mist Completed", "image": "gebura.webp", "description": "Descrição a definir.", "effect": "damage", "bonus": 0.25 } },
+      "achievement": { "id": "ach-gebura", "name": "The Red Mist Completed", "image": "gebura.webp", "description": "'IS THAT THE RED MIST?!'", "effect": "damage", "bonus": 0.25 } },
 
     { "id": "melt-chesed", "name": "Chesed Meltdown", "sephirah": "Chesed", "risk": "Sephirah", "hex": "#3b7fd4", "image": "chesed-meltdown2.webp", "background": "chesed-background.png", "time": 999, "raid_hp": 10000000000000000000,
       "music": "chesed-meltdown.mp3",
       "waves": [
         { "name": "Chesed", "risk": "Sephirah", "image": "chesed-meltdown1.gif", "hp": 5000000000000000000 }
       ],
-      "achievement": { "id": "ach-chesed", "name": "Chesed Meltdown Completed", "image": "chesed.webp", "description": "Descrição a definir.", "effect": "money", "bonus": 0.30 } },
+      "achievement": { "id": "ach-chesed", "name": "Chesed Meltdown Completed", "image": "chesed.webp", "description": "'How many times do we have to fail?'", "effect": "money", "bonus": 0.30 } },
 
     { "id": "melt-hokma", "name": "Hokma Meltdown", "sephirah": "Hokma", "risk": "Sephirah", "hex": "#b0b7c3", "image": "hokma-meltdown2.webp", "background": "hokma-background.png", "time": 999, "raid_hp": 50000000000000000000,
     "music": "hokma-meltdown.mp3",
     "waves": [
         { "name": "Hokma", "risk": "Sephirah", "image": "hokma-meltdown1.gif", "hp": 25000000000000000000 }
       ],
-    "achievement": { "id": "ach-hokma", "name": "Hokma Meltdown Completed", "image": "hokma.webp", "description": "Descrição a definir.", "effect": "money", "bonus": 0.50 } },
+    "achievement": { "id": "ach-hokma", "name": "Hokma Meltdown Completed", "image": "hokma.webp", "description": "'Time is like a scythe...'", "effect": "money", "bonus": 0.50 } },
 
     { "id": "melt-binah", "name": "An Arbiter", "sephirah": "Binah", "risk": "Sephirah", "hex": "#E6BD37", "image": "binah-meltdown.webp", "background": "binah-background.png", "time": 999, "raid_hp": 1000000000000000000000,
       "music": "binah-meltdown.mp3",
-      "achievement": { "id": "ach-binah", "name": "An Arbiter Completed", "image": "binah.webp", "description": "Descrição a definir.", "effect": "damage", "bonus": 0.50 } }
+      "achievement": { "id": "ach-binah", "name": "An Arbiter Completed", "image": "binah.webp", "description": "'You cannot escape the Head.'", "effect": "damage", "bonus": 0.50 } }
   ]
 }
 
